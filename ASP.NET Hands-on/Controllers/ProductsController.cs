@@ -1,0 +1,65 @@
+﻿using ASP.NET_Hands_on.Interface;
+using ASP.NET_Hands_on.Model;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ASP.NET_Hands_on.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")] // api/product
+    public class ProductsController : ControllerBase
+    {
+        private readonly IProductService _productService;
+
+        public ProductsController(IProductService productService)
+        {
+            _productService = productService;
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(_productService.GetAll());
+        }
+
+        [HttpGet("search")]
+        public IActionResult GetByProductName([FromQuery] string keyword)
+        {
+            var productsFound = _productService.SearchByNameOrProductId(keyword);
+            return Ok(productsFound);
+        }
+
+        //POST: api/products
+        [HttpPost]
+        public IActionResult Create([FromBody] Product newProduct)
+        {
+            var created = _productService.Create(newProduct);
+            return CreatedAtAction(nameof(GetAll), new { id = created.Id }, created);
+        }
+
+        //POST: api/products/many
+        [HttpPost("many")]
+        public IActionResult CreateMany([FromBody] List<Product> productList)
+        {
+            var created = _productService.CreateMany(productList);
+            return CreatedAtAction(nameof(GetAll), null, created);
+        }
+
+        //PUT: api/products/5
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody] Product updateData)
+        {
+            var updated = _productService.Update(id, updateData);
+            if (updated == null) return NotFound("Product not found");
+            return Ok(updated);
+        }
+
+        //DELETE: api/products/5
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var deleted = _productService.Delete(id);
+            if (!deleted) return NotFound();
+            return NoContent();
+        }
+    }
+}

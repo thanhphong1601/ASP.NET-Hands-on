@@ -1,0 +1,72 @@
+@MyProject_BaseUrl = http://localhost:5225
+
+### Get products
+GET {{MyProject_BaseUrl}}/api/products
+X-Api-Key: MySecretAPIKey
+
+### Create product
+POST {{MyProject_BaseUrl}}/api/products
+X-Api-Key: MySecretAPIKey
+Content-Type: application/json
+
+{
+  "name": "Chuột có dây Razor",
+  "productId": "PKC02"
+}
+
+### Create products
+POST {{MyProject_BaseUrl}}/api/products/many
+X-Api-Key: MySecretAPIKey
+Content-Type: application/json
+[
+{
+  "name": "Laptop Asus",
+  "productId": "LTA01",
+  "price": 17000000
+},
+{
+  "name": "Bàn phím cơ",
+  "productId": "BPC01",
+  "price": 1500000
+},
+{
+  "name": "Chuột không dây",
+  "productId": "PKC01",
+  "price": 500000
+},
+{
+  "name": "Màn hình",
+  "productId": "MH01",
+  "price": 3000000
+}
+]
+
+### Searching
+GET {{MyProject_BaseUrl}}/api/products/search?keyword=BPC01
+X-Api-Key: MySecretAPIKey
+
+### Update product info
+PUT {{MyProject_BaseUrl}}/api/products/6
+X-Api-Key: MySecretAPIKey
+Content-Type: application/json
+
+{
+  "name": "Chuột có dây Razor V2",
+  "productId": "PKC02",
+  "price": 885000
+}
+
+### Create order
+POST {{MyProject_BaseUrl}}/api/orders
+X-Api-Key: MySecretAPIKey
+Content-Type: application/json
+
+[1, 2, 3, 4, 4]
+
+### Get orders
+GET {{MyProject_BaseUrl}}/api/orders
+X-Api-Key: MySecretAPIKey
+
+### Delete order
+DELETE {{MyProject_BaseUrl}}/api/orders/1
+X-Api-Key: MySecretAPIKey

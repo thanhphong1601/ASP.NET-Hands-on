@@ -1,0 +1,41 @@
+﻿using ASP.NET_Hands_on.ClientSideDatabase;
+using ASP.NET_Hands_on.Model;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ASP.NET_Hands_on.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class OrdersController : ControllerBase
+    {
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(MockDatabase.Orders);
+        }
+
+        // CLient only needs to send a List consisting of products' id: [1, 2, 1]
+        [HttpPost]
+        public IActionResult CreateOrder([FromBody] List<int> productIds)
+        {
+            var newOrder = new Order { OrderId = MockDatabase.OrderIdCounter++ };
+
+            foreach (var id in productIds)
+            {
+                var product = MockDatabase.Products.FirstOrDefault(p => p.Id == id);
+                if (product != null)
+                {
+                    newOrder.Products.Add(product);
+                }
+            }
+
+            if (!newOrder.Products.Any())
+            {
+                return BadRequest("No valid products found to create order.");
+            }
+
+            MockDatabase.Orders.Add(newOrder);
+            return Ok(newOrder);
+        }
+    }
+}
