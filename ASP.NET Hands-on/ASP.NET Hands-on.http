@@ -70,3 +70,14 @@ X-Api-Key: MySecretAPIKey
 ### Delete order
 DELETE {{MyProject_BaseUrl}}/api/orders/1
 X-Api-Key: MySecretAPIKey
+
+###
+@name loginRequest
+POST {{MyProject_BaseUrl}}/auth/login
+
+###
+@authToken = {{loginRequest.response.body.token}}
+
+### Profile Fetching
+GET {{MyProject_BaseUrl}}/auth/profile
+Authorization: Bearer {{authToken}}

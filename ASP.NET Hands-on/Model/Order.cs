@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using FluentValidation;
+using System.Collections.Generic;
 
 namespace ASP.NET_Hands_on.Model
 {
@@ -8,5 +9,9 @@ namespace ASP.NET_Hands_on.Model
         public List<Product> Products { get; set; } = new List<Product>();
 
         public decimal TotalPrice { get; set; }
+    }
+
+    public class OrderValidator : AbstractValidator<Order>
+    {
     }
 }

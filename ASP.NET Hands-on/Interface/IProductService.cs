@@ -1,4 +1,5 @@
 using ASP.NET_Hands_on.Model;
+using ASP.NET_Hands_on.DTO;
 
 namespace ASP.NET_Hands_on.Interface
 {
@@ -9,6 +10,7 @@ namespace ASP.NET_Hands_on.Interface
         Product Create(Product newProduct);
         List<Product> CreateMany(List<Product> productList);
         Product? Update(int id, Product updateData);
+        Product? Patch(int id, ProductPatchRequest patchRequest);
         bool Delete(int id);
     }
 }

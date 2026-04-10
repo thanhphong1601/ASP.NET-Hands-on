@@ -2,14 +2,22 @@
 using ASP.NET_Hands_on.Enum;
 using ASP.NET_Hands_on.Interface;
 using ASP.NET_Hands_on.Model;
+using Microsoft.Extensions.Logging;
 
 namespace ASP.NET_Hands_on.Service
 {
     public class OrderService : IOrderService
     {
+        private readonly ILogger<OrderService> _logger;
+
+        public OrderService(ILogger<OrderService> logger)
+        {
+            _logger = logger;
+        }
         //Need DTO productRequest (productId, quantity) to create order_product entry in the database, and also to calculate total price of the order
         public async Task<bool> AddProductToOrderAsync(int orderId, int productId, int quantity, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("OrderService.AddProductToOrderAsync - orderId: {OrderId}, productId: {ProductId}, qty: {Qty}", orderId, productId, quantity);
             await Task.Delay(200, cancellationToken); // Simulate async work
 
             Order? order = MockDatabase.Orders.FirstOrDefault(o => o.OrderId == orderId);
@@ -39,6 +47,7 @@ namespace ASP.NET_Hands_on.Service
 
             CalculateTotalPriceWhenAddOrRemoveProduct(orderId);
 
+            _logger.LogInformation("OrderService.AddProductToOrderAsync - added product to order {OrderId}", orderId);
             return true;
         }
 
@@ -46,6 +55,7 @@ namespace ASP.NET_Hands_on.Service
 
         public async Task<Order> CreateOrderAsync(List<int> productIds, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("OrderService.CreateOrderAsync - creating order with {Count} productIds", productIds?.Count ?? 0);
             await Task.Delay(200, cancellationToken); // Simulate async work
 
             if (productIds == null || productIds.Count == 0)
@@ -82,11 +92,13 @@ namespace ASP.NET_Hands_on.Service
             MockDatabase.Orders.Add(newOrder);
             CalculateTotalPriceWhenAddOrRemoveProduct(newOrder.OrderId);
 
+            _logger.LogInformation("OrderService.CreateOrderAsync - created order {OrderId}", newOrder.OrderId);
             return newOrder;
         }
 
         public async Task<object> GetOrderByIdAsync(int orderId, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("OrderService.GetOrderByIdAsync - orderId: {OrderId}", orderId);
             var order = MockDatabase.Orders.FirstOrDefault(o => o.OrderId == orderId);
             if (order == null)
                 throw new KeyNotFoundException($"Order with id {orderId} was not found.");
@@ -116,6 +128,7 @@ namespace ASP.NET_Hands_on.Service
 
         public async Task<List<Order>> GetOrdersAsync(CancellationToken cancellationToken)
         {
+            _logger.LogInformation("OrderService.GetOrdersAsync - retrieving all orders");
             await Task.Delay(200, cancellationToken); // Simulate async work
 
             var orders = MockDatabase.Orders;
@@ -138,10 +151,15 @@ namespace ASP.NET_Hands_on.Service
 
         public async Task<bool> DeleteOrderAsync(int orderId, CancellationToken cancellationToken)
         {
+            _logger.LogInformation("OrderService.DeleteOrderAsync - deleting order {OrderId}", orderId);
             await Task.Delay(100, cancellationToken);
 
             var order = MockDatabase.Orders.FirstOrDefault(o => o.OrderId == orderId);
-            if (order == null) return false;
+            if (order == null)
+            {
+                _logger.LogWarning("OrderService.DeleteOrderAsync - order {OrderId} not found", orderId);
+                return false;
+            }
 
             // remove related order-product entries
             MockDatabase.OrderProducts.RemoveAll(op => op.OrderId == orderId);
@@ -149,6 +167,7 @@ namespace ASP.NET_Hands_on.Service
             // remove order
             MockDatabase.Orders.Remove(order);
 
+            _logger.LogInformation("OrderService.DeleteOrderAsync - deleted order {OrderId}", orderId);
             return true;
         }
     }
