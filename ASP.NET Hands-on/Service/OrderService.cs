@@ -36,9 +36,8 @@ namespace ASP.NET_Hands_on.Service
             } else
             {
                 order.Products.Add(product);
-                MockDatabase.OrderProducts.Add(new Order_Product
+                MockDatabase.OrderProducts.Add(new OrderProduct
                 {
-                    Id = MockDatabase.OrderProductIdCounter++,
                     OrderId = orderId,
                     ProductId = productId,
                     Quantity = quantity
@@ -80,9 +79,8 @@ namespace ASP.NET_Hands_on.Service
             {
                 int qty = productQuantities[product.Id];
 
-                MockDatabase.OrderProducts.Add(new Order_Product
+                MockDatabase.OrderProducts.Add(new OrderProduct
                 {
-                    Id = MockDatabase.OrderProductIdCounter++,
                     OrderId = newOrder.OrderId,
                     ProductId = product.Id,
                     Quantity = qty

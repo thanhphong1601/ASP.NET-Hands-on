@@ -9,6 +9,8 @@ namespace ASP.NET_Hands_on.Model
         public List<Product> Products { get; set; } = new List<Product>();
 
         public decimal TotalPrice { get; set; }
+
+        public List<OrderProduct> OrderProducts { get; set; } = new();
     }
 
     public class OrderValidator : AbstractValidator<Order>

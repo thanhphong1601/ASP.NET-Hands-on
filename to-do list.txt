@@ -1,0 +1,2 @@
+chay dotnet ef database update để tạo/up database
+tạo class DataExtensions: https://www.youtube.com/watch?v=YbRe4iIVYJk&t=3626s 2h

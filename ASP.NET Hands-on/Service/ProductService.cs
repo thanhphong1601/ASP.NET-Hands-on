@@ -50,11 +50,12 @@ namespace ASP.NET_Hands_on.Service
         {
             _logger.LogInformation("ProductService.CreateMany - creating {Count} products", productList?.Count ?? 0);
             var created = new List<Product>();
-            foreach (var product in productList)
+            created.AddRange(productList.Select(p =>
             {
-                var p = Create(product);
-                created.Add(p);
-            }
+                p.Id = MockDatabase.ProductIdCounter++;
+                MockDatabase.Products.Add(p);
+                return p;
+            }));
             _logger.LogInformation("ProductService.CreateMany - created {Count} products", created.Count);
             return created;
         }

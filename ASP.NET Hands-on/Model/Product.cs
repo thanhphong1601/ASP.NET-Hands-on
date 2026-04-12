@@ -11,6 +11,8 @@ namespace ASP.NET_Hands_on.Model
         [Required]
         public string? Name { get; set; }
         public decimal Price { get; set; } = decimal.Zero;
+
+        public List<OrderProduct> OrderProducts { get; set; } = new();
     }
 
     public class ProductValidator : AbstractValidator<Product>

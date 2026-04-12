@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ASP.NET Hands-on")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f0d76a4c0fc4f496569db7c2eb16d64d080b3dd9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e5b95777b63a5eb65f2d5b0c0df4935b040a6618")]
 [assembly: System.Reflection.AssemblyProductAttribute("ASP.NET Hands-on")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ASP.NET Hands-on")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

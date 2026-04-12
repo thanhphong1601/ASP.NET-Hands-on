@@ -1,12 +1,14 @@
-using ASP.NET_Hands_on.Middlewares;
-using ASP.NET_Hands_on.Interface;
-using ASP.NET_Hands_on.Service;
-using Microsoft.AspNetCore.Authentication.Negotiate;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
+using ASP.NET_Hands_on.DatabseContext;
 using ASP.NET_Hands_on.Exceptions;
+using ASP.NET_Hands_on.Interface;
+using ASP.NET_Hands_on.Middlewares;
+using ASP.NET_Hands_on.Service;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.Negotiate;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +74,12 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+
+// Add database
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=MyAppData.db"));
+//var connectionString = "MyAppData.db"
+//builder.Services.AddSqlite<AppDbContext>(connectionString);
 
 // Enable Serilog integration with the generic host
 builder.Host.UseSerilog();
