@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Security.Authentication;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -39,12 +40,22 @@ namespace ASP.NET_Hands_on.Exceptions
             if (exception is KeyNotFoundException)
             {
                 statusCode = (int)HttpStatusCode.NotFound;
-                message = exception.Message;
+                message = "There is something missing! Try again and make sure all are fullfill!";
+            }
+            else if (exception is AuthenticationException)
+            {
+                statusCode = (int)HttpStatusCode.Unauthorized;
+                message = "Invalid username or password!";
             }
             else if (exception is ArgumentException)
             {
                 statusCode = (int)HttpStatusCode.BadRequest;
-                message = exception.Message;
+                message = "The argument provided is not right!";
+            }
+            else if (exception is JsonException)
+            {
+                statusCode = (int)HttpStatusCode.InternalServerError;
+                message = "Can not process Json file due to some error!";
             }
             else if (exception is OperationCanceledException || exception is TaskCanceledException)
             {

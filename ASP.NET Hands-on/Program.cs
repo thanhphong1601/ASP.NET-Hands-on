@@ -1,14 +1,20 @@
+using ASP.NET_Hands_on.Data;
 using ASP.NET_Hands_on.DatabseContext;
 using ASP.NET_Hands_on.Exceptions;
 using ASP.NET_Hands_on.Interface;
 using ASP.NET_Hands_on.Middlewares;
+using ASP.NET_Hands_on.Model;
 using ASP.NET_Hands_on.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Negotiate;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Refit;
 using Serilog;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,13 +54,57 @@ builder.Services
             ValidAudience = jwtSettings["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(secretKey),
 
-            ClockSkew = TimeSpan.Zero // Optional: Set clock skew to zero for testing purposes
+            ClockSkew = TimeSpan.Zero
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = async context =>
+            {
+                context.HandleResponse();
+
+            var response = context.Response;
+            response.StatusCode = StatusCodes.Status401Unauthorized;
+            response.ContentType = "application/json";
+
+            var payload = new
+            {
+                error = "Unauthorized",
+                message = string.IsNullOrEmpty(context.ErrorDescription) ? "Authentication token is missing or invalid." : context.ErrorDescription
+            };
+
+                await response.WriteAsync(JsonSerializer.Serialize(payload));
+            },
+
+            OnAuthenticationFailed = context =>
+            {
+                return Task.CompletedTask;
+            }
         };
     });
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var errors = context.ModelState
+                .Where(e => e.Value.Errors.Count > 0)
+                .SelectMany(kvp => kvp.Value.Errors.Select(e => e.ErrorMessage))
+                .ToList();
+
+            var responseObj = new
+            {
+                Success = false,
+                Message = "Input data is not correct",
+                Errors = errors
+            };
+
+            return new BadRequestObjectResult(responseObj);
+        };
+    });
+
 //ConfigureApiBehaviorOptions
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -63,23 +113,43 @@ builder.Services.AddOpenApiDocument();
 // Register product and order services
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddTransient<IAuthService, AuthService>();
+
+// register health check
+builder.Services.AddHealthChecks();
 
 // Add CORS policy to allow requests from any origin (for testing purposes)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()    
-              .AllowAnyHeader()    
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
 
 // Add database
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=MyAppData.db"));
-//var connectionString = "MyAppData.db"
-//builder.Services.AddSqlite<AppDbContext>(connectionString);
+var connectionString = "Data Source=MyAppData.db";
+builder.Services.AddSqlite<AppDbContext>(connectionString,
+    optionsAction: options => options.UseSeeding((context, _) =>
+    {
+        if (!context.Set<Product>().Any())
+        {
+            context.Set<Product>().AddRange(
+                new Product { Name = "Laptop Asus", ProductId = "LTA01", Price = 17000000 },
+                new Product { Name = "Bàn phím cơ", ProductId = "BPC01", Price = 1500000 },
+                new Product { Name = "Chuột không dây", ProductId = "PKC01", Price = 500000 },
+                new Product { Name = "Màn hình", ProductId = "MH01", Price = 3000000 }
+            );
+            context.SaveChanges();
+        }
+    }));
+
+// Add Refit
+builder.Services
+    .AddRefitClient<IProductsFetchingApiByUrl>()
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://dummyjson.com/"));
 
 // Enable Serilog integration with the generic host
 builder.Host.UseSerilog();
@@ -94,13 +164,44 @@ if (app.Environment.IsDevelopment())
     app.UseOpenApi();
 
     app.UseSwaggerUi();
+
+    app.UseCors("AllowAll");
 }
 
+//config this CORS when production, only allow specific origins
 app.UseCors("AllowAll");
 
-app.UseHttpsRedirection();
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
 
+        //construct the body
+        var response = new
+        {
+            Status = report.Status.ToString(), // "Healthy", "Degraded", or "Unhealthy"
+
+            // Get detailed result from health check tests before
+            HealthChecks = report.Entries.Select(e => new
+            {
+                Component = e.Key,
+                Status = e.Value.Status.ToString(),
+                Description = e.Value.Description ?? "OK"
+            }),
+
+            // Showing the total duration of health check execution
+            HealthCheckDuration = report.TotalDuration
+        };
+
+        // Serialize to json to return to client
+        await JsonSerializer.SerializeAsync(context.Response.Body, response);
+    }
+});
+
+app.UseHttpsRedirection();
 app.UseAuthentication();
+
 //app.UseMiddleware<ApiKeyCheckMiddleware>();
 
 // Add global exception handler middleware
@@ -109,6 +210,9 @@ app.AddExceptionHandler<GlobalExceptionHandler>();
 app.UseAuthorization();
 
 app.MapControllers();
+
+Log.Information("Migrating database");
+app.MigrateDb();
 
 try
 {

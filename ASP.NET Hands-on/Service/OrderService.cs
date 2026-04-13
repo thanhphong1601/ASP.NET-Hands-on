@@ -3,48 +3,51 @@ using ASP.NET_Hands_on.Enum;
 using ASP.NET_Hands_on.Interface;
 using ASP.NET_Hands_on.Model;
 using Microsoft.Extensions.Logging;
+using ASP.NET_Hands_on.DatabseContext;
+using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace ASP.NET_Hands_on.Service
 {
     public class OrderService : IOrderService
     {
         private readonly ILogger<OrderService> _logger;
+        private readonly AppDbContext _db;
 
-        public OrderService(ILogger<OrderService> logger)
+        public OrderService(ILogger<OrderService> logger, AppDbContext db)
         {
             _logger = logger;
+            _db = db;
         }
         //Need DTO productRequest (productId, quantity) to create order_product entry in the database, and also to calculate total price of the order
         public async Task<bool> AddProductToOrderAsync(int orderId, int productId, int quantity, CancellationToken cancellationToken)
         {
             _logger.LogInformation("OrderService.AddProductToOrderAsync - orderId: {OrderId}, productId: {ProductId}, qty: {Qty}", orderId, productId, quantity);
-            await Task.Delay(200, cancellationToken); // Simulate async work
 
-            Order? order = MockDatabase.Orders.FirstOrDefault(o => o.OrderId == orderId);
-            if (order is null)
-                throw new KeyNotFoundException($"Order with id {orderId} was not found.");
+            var order = await _db.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId, cancellationToken);
+            if (order == null) throw new KeyNotFoundException($"Order with id {orderId} was not found.");
 
-            Product? product = MockDatabase.Products.FirstOrDefault(p => p.Id == productId);
-            if (product == null)
-                throw new KeyNotFoundException($"Product with id {productId} was not found.");
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == productId, cancellationToken);
+            if (product == null) throw new KeyNotFoundException($"Product with id {productId} was not found.");
 
-            var record = MockDatabase.OrderProducts.FirstOrDefault(op => op.OrderId == orderId && op.ProductId == productId);
-            //if there is a record of that product
-            if (record is not null)
+            var record = await _db.OrderProducts.FirstOrDefaultAsync(op => op.OrderId == orderId && op.ProductId == productId, cancellationToken);
+            if (record != null)
             {
                 record.Quantity += quantity;
-            } else
+                _db.OrderProducts.Update(record);
+            }
+            else
             {
-                order.Products.Add(product);
-                MockDatabase.OrderProducts.Add(new OrderProduct
+                await _db.OrderProducts.AddAsync(new OrderProduct
                 {
                     OrderId = orderId,
                     ProductId = productId,
                     Quantity = quantity
-                });
+                }, cancellationToken);
             }
 
-            CalculateTotalPriceWhenAddOrRemoveProduct(orderId);
+            await _db.SaveChangesAsync(cancellationToken);
+            await CalculateTotalPriceWhenAddOrRemoveProduct(orderId);
 
             _logger.LogInformation("OrderService.AddProductToOrderAsync - added product to order {OrderId}", orderId);
             return true;
@@ -55,40 +58,43 @@ namespace ASP.NET_Hands_on.Service
         public async Task<Order> CreateOrderAsync(List<int> productIds, CancellationToken cancellationToken)
         {
             _logger.LogInformation("OrderService.CreateOrderAsync - creating order with {Count} productIds", productIds?.Count ?? 0);
-            await Task.Delay(200, cancellationToken); // Simulate async work
 
             if (productIds == null || productIds.Count == 0)
                 throw new ArgumentException("There is no products found");
 
-            // a list contains products' key and quantity
+            // group product ids to get quantities
             var productQuantities = productIds.GroupBy(id => id)
                 .ToDictionary(g => g.Key, g => g.Count());
 
-            // find valid products using keys from the productQuantities list, if the product is not found, it will be ignored
-            var validProducts = MockDatabase.Products
-                .Where(p => productQuantities.ContainsKey(p.Id))
-                .ToList();
+            // validate product ids and create order
+            var newOrder = new Order();
+            await _db.Orders.AddAsync(newOrder, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
 
-            Order newOrder = new Order { 
-                OrderId = MockDatabase.OrderIdCounter++,
-                Products = validProducts
-            };
+            var validProductIds = productQuantities.Keys.ToList();
+            var validProducts = await _db.Products
+                .Where(p => validProductIds.Contains(p.Id))
+                .ToDictionaryAsync(p => p.Id, p => p, cancellationToken);
 
-            // create order_product entries for each valid product in the order
-            foreach (var product in validProducts)
+            // create order-product records
+            foreach (var kv in productQuantities)
             {
-                int qty = productQuantities[product.Id];
+                var productId = kv.Key;
+                var qty = kv.Value;
 
-                MockDatabase.OrderProducts.Add(new OrderProduct
+                if (!validProducts.ContainsKey(productId))
+                    continue; // ignore invalid product ids
+
+                await _db.OrderProducts.AddAsync(new OrderProduct
                 {
                     OrderId = newOrder.OrderId,
-                    ProductId = product.Id,
+                    ProductId = productId,
                     Quantity = qty
-                });
+                }, cancellationToken);
             }
 
-            MockDatabase.Orders.Add(newOrder);
-            CalculateTotalPriceWhenAddOrRemoveProduct(newOrder.OrderId);
+            await _db.SaveChangesAsync(cancellationToken);
+            await CalculateTotalPriceWhenAddOrRemoveProduct(newOrder.OrderId);
 
             _logger.LogInformation("OrderService.CreateOrderAsync - created order {OrderId}", newOrder.OrderId);
             return newOrder;
@@ -97,28 +103,29 @@ namespace ASP.NET_Hands_on.Service
         public async Task<object> GetOrderByIdAsync(int orderId, CancellationToken cancellationToken)
         {
             _logger.LogInformation("OrderService.GetOrderByIdAsync - orderId: {OrderId}", orderId);
-            var order = MockDatabase.Orders.FirstOrDefault(o => o.OrderId == orderId);
-            if (order == null)
-                throw new KeyNotFoundException($"Order with id {orderId} was not found.");
 
-            await Task.Delay(200, cancellationToken); // Simulate async work
+            var order = await _db.Orders
+                .AsNoTracking()
+                .Include(o => o.OrderProducts)
+                    .ThenInclude(op => op.Product)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId, cancellationToken);
+
+            if (order == null) throw new KeyNotFoundException($"Order with id {orderId} was not found.");
+
+            var products = order.OrderProducts
+                .Select(op => new
+                {
+                    productId = op.Product.ProductId,
+                    price = op.Product.Price,
+                    quantity = op.Quantity
+                })
+                .ToList();
 
             var orderDetails = new
             {
                 orderId = order.OrderId,
                 totalPrice = order.TotalPrice,
-                products = MockDatabase.OrderProducts
-                    .Where(op => op.OrderId == order.OrderId)
-                    .Join(MockDatabase.Products,
-                        op => op.ProductId,
-                        p => p.Id,
-                        (op, p) => new
-                        {
-                            productId = p.ProductId,
-                            price = p.Price,
-                            quantity = op.Quantity
-                        })
-                    .ToList()
+                products
             };
 
             return orderDetails;
@@ -126,33 +133,30 @@ namespace ASP.NET_Hands_on.Service
 
         public async Task<List<Order>> GetOrdersAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("OrderService.GetOrdersAsync - retrieving all orders");
-            await Task.Delay(200, cancellationToken); // Simulate async work
-
-            var orders = MockDatabase.Orders;
-            if (orders.Count == 0)
-                return new List<Order>();
-
-            return orders;
+            _logger.LogInformation("OrderService.GetOrdersAsync - retrieving all orders from db");
+            return await _db.Orders.AsNoTracking().ToListAsync(cancellationToken);
         }
 
-        public void CalculateTotalPriceWhenAddOrRemoveProduct(int orderId)
+        public async Task CalculateTotalPriceWhenAddOrRemoveProduct(int orderId)
         {
-            decimal totalPrice = MockDatabase.OrderProducts
+            decimal totalPrice = await _db.OrderProducts
                 .Where(op => op.OrderId == orderId)
-                .Join(MockDatabase.Products, op => op.ProductId, p => p.Id, (op, p) => op.Quantity * p.Price)
-                .Sum();
+                .Join(_db.Products, op => op.ProductId, p => p.Id, (op, p) => op.Quantity * p.Price)
+                .SumAsync();
 
-            Order? order = MockDatabase.Orders.FirstOrDefault(o => o.OrderId == orderId);
-            order?.TotalPrice = totalPrice;
+            var order = await _db.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
+            if (order != null)
+            {
+                order.TotalPrice = totalPrice;
+                await _db.SaveChangesAsync();
+            }
         }
 
         public async Task<bool> DeleteOrderAsync(int orderId, CancellationToken cancellationToken)
         {
             _logger.LogInformation("OrderService.DeleteOrderAsync - deleting order {OrderId}", orderId);
-            await Task.Delay(100, cancellationToken);
 
-            var order = MockDatabase.Orders.FirstOrDefault(o => o.OrderId == orderId);
+            var order = await _db.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId, cancellationToken);
             if (order == null)
             {
                 _logger.LogWarning("OrderService.DeleteOrderAsync - order {OrderId} not found", orderId);
@@ -160,10 +164,13 @@ namespace ASP.NET_Hands_on.Service
             }
 
             // remove related order-product entries
-            MockDatabase.OrderProducts.RemoveAll(op => op.OrderId == orderId);
+            var related = _db.OrderProducts.Where(op => op.OrderId == orderId);
+            _db.OrderProducts.RemoveRange(related);
 
             // remove order
-            MockDatabase.Orders.Remove(order);
+            _db.Orders.Remove(order);
+
+            await _db.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation("OrderService.DeleteOrderAsync - deleted order {OrderId}", orderId);
             return true;

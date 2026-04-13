@@ -11,7 +11,8 @@ Content-Type: application/json
 
 {
   "name": "Chuột có dây Razor",
-  "productId": "PKC02"
+  "productId": "PKC02",
+  "price": "120000"
 }
 
 ### Create products
@@ -42,7 +43,7 @@ Content-Type: application/json
 ]
 
 ### Searching
-GET {{MyProject_BaseUrl}}/api/products/search?keyword=BPC01
+GET {{MyProject_BaseUrl}}/api/products/search?keyword=chuột
 X-Api-Key: MySecretAPIKey
 
 ### Update product info

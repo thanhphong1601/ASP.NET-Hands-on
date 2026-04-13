@@ -2,94 +2,108 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
-using ASP.NET_Hands_on.ClientSideDatabase;
 using ASP.NET_Hands_on.DTO;
 using ASP.NET_Hands_on.Interface;
 using ASP.NET_Hands_on.Model;
 using Microsoft.Extensions.Logging;
+using ASP.NET_Hands_on.DatabseContext;
+using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ASP.NET_Hands_on.Service
 {
     public class ProductService : IProductService
     {
         private readonly ILogger<ProductService> _logger;
+        private readonly AppDbContext _db;
 
-        public ProductService(ILogger<ProductService> logger)
+        public ProductService(ILogger<ProductService> logger, AppDbContext db)
         {
             _logger = logger;
-        }
-        public List<Product> GetAll()
-        {
-            _logger.LogInformation("ProductService.GetAll - retrieving all products");
-            return MockDatabase.Products;
+            _db = db;
         }
 
-        public List<Product> SearchByNameOrProductId(string keyword)
+        public async Task<(List<Product> Items, int TotalCount)> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("ProductService.Search - keyword: {Keyword}", keyword);
+            _logger.LogInformation("ProductService.GetAllAsync - retrieving paged products page {Page} size {Size}", pageNumber, pageSize);
+
+            if (pageNumber <= 0) pageNumber = 1;
+            if (pageSize <= 0) pageSize = 10;
+
+            var totalCount = await _db.Products.AsNoTracking().CountAsync(cancellationToken);
+
+            var items = await _db.Products
+                .AsNoTracking()
+                .OrderBy(p => p.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return (items, totalCount);
+        }
+
+        public async Task<List<Product>> SearchByNameOrProductIdAsync(string keyword, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("ProductService.SearchByNameOrProductIdAsync - keyword: {Keyword}", keyword);
             if (string.IsNullOrWhiteSpace(keyword)) return new List<Product>();
 
-            var results = MockDatabase.Products
-                .Where(p => p.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase) ||
-                            p.ProductId.Contains(keyword, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-
-            _logger.LogInformation("ProductService.Search - found {Count} results", results.Count);
-            return results;
+            var q = keyword.Trim();
+            return await _db.Products
+                .AsNoTracking()
+                .Where(p => EF.Functions.Like(p.Name, $"%{q}%") || EF.Functions.Like(p.ProductId, $"%{q}%"))
+                .ToListAsync(cancellationToken);
         }
 
-        public Product Create(Product newProduct)
+        public async Task<Product> CreateAsync(Product newProduct, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("ProductService.Create - creating product {ProductId} {Name}", newProduct.ProductId, newProduct.Name);
-            newProduct.Id = MockDatabase.ProductIdCounter++;
-            MockDatabase.Products.Add(newProduct);
-            _logger.LogInformation("ProductService.Create - created id {Id}", newProduct.Id);
+            _logger.LogInformation("ProductService.CreateAsync - creating product {ProductId} {Name}", newProduct.ProductId, newProduct.Name);
+            await _db.Products.AddAsync(newProduct, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("ProductService.CreateAsync - created id {Id}", newProduct.Id);
             return newProduct;
         }
-        public List<Product> CreateMany(List<Product> productList)
+
+        public async Task<List<Product>> CreateManyAsync(List<Product> productList, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("ProductService.CreateMany - creating {Count} products", productList?.Count ?? 0);
-            var created = new List<Product>();
-            created.AddRange(productList.Select(p =>
-            {
-                p.Id = MockDatabase.ProductIdCounter++;
-                MockDatabase.Products.Add(p);
-                return p;
-            }));
-            _logger.LogInformation("ProductService.CreateMany - created {Count} products", created.Count);
-            return created;
+            _logger.LogInformation("ProductService.CreateManyAsync - creating {Count} products", productList?.Count ?? 0);
+            await _db.Products.AddRangeAsync(productList, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("ProductService.CreateManyAsync - created {Count} products", productList.Count);
+            return productList;
         }
 
-        public Product? Update(int id, Product updateData)
+        public async Task<Product> UpdateAsync(int id, Product updateData, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("ProductService.Update - updating id {Id}", id);
-            var product = MockDatabase.Products.FirstOrDefault(p => p.Id == id);
-            if (product == null) return null;
+            _logger.LogInformation("ProductService.UpdateAsync - updating id {Id}", id);
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            if (product == null) throw new KeyNotFoundException("Product not found");
 
             product.Name = updateData.Name;
             product.ProductId = updateData.ProductId;
             product.Price = updateData.Price;
 
-            _logger.LogInformation("ProductService.Update - updated id {Id}", id);
+            await _db.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("ProductService.UpdateAsync - updated id {Id}", id);
             return product;
         }
 
-        public bool Delete(int id)
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("ProductService.Delete - deleting id {Id}", id);
-            var product = MockDatabase.Products.FirstOrDefault(p => p.Id == id);
-            if (product == null) return false;
+            _logger.LogInformation("ProductService.DeleteAsync - deleting id {Id}", id);
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            if (product == null) throw new KeyNotFoundException("Product not found");
 
-            MockDatabase.Products.Remove(product);
-            _logger.LogInformation("ProductService.Delete - deleted id {Id}", id);
-            return true;
+            _db.Products.Remove(product);
+            await _db.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("ProductService.DeleteAsync - deleted id {Id}", id);
         }
 
-        public Product? Patch(int id, ProductPatchRequest patchRequest)
+        public async Task<Product> PatchAsync(int id, ProductPatchRequest patchRequest, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("ProductService.Patch - patching id {Id} field {Field}", id, patchRequest?.FieldName);
-            var product = MockDatabase.Products.FirstOrDefault(p => p.Id == id);
-            if (product == null) return null;
+            _logger.LogInformation("ProductService.PatchAsync - patching id {Id} field {Field}", id, patchRequest?.FieldName);
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            if (product == null) throw new KeyNotFoundException("Product not found");
 
             if (patchRequest == null) throw new ArgumentNullException(nameof(patchRequest));
             var field = patchRequest.FieldName?.Trim();
@@ -118,10 +132,9 @@ namespace ASP.NET_Hands_on.Service
                     throw new ArgumentException("Unsupported field.");
             }
 
-            _logger.LogInformation("ProductService.Patch - patched id {Id} field {Field}", id, field);
+            await _db.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("ProductService.PatchAsync - patched id {Id} field {Field}", id, field);
             return product;
         }
-
-
     }
 }

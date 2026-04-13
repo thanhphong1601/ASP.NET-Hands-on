@@ -12,34 +12,63 @@ namespace ASP.NET_Hands_on.Controllers
     {
         private readonly IProductService _productService;
         private readonly ILogger<ProductsController> _logger;
-        readonly ProductValidator validator = new ProductValidator();
+        private readonly ProductValidator validator = new ProductValidator();
+        private readonly IProductsFetchingApiByUrl _productsFetchingApiByUrl;
+        private readonly IConfiguration _configuration;
 
-
-        public ProductsController(IProductService productService, ILogger<ProductsController> logger)
+        public ProductsController(IProductService productService, ILogger<ProductsController> logger, IProductsFetchingApiByUrl productsFetchingApiByUrl, IConfiguration configuration)
         {
             _productService = productService;
             _logger = logger;
+            _productsFetchingApiByUrl = productsFetchingApiByUrl;
+            _configuration = configuration;
         }
 
+        /// <summary>
+        /// This api is used to get all products in database, only admin can access this api, if you want to test, please login with admin account to get token and add it to header with key "Authorization" and value "Bearer {token}"
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] int? pageNumber, [FromQuery] int? numberOrProduct, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to ProductsController.GetAll");
-            return Ok(_productService.GetAll());
+            // read defaults from configuration
+            var defaultPageNumber = _configuration.GetValue<int?>("Paging:PageNumber") ?? 1;
+            var defaultPageSize = _configuration.GetValue<int?>("Paging:PageSize") ?? 10;
+
+            var page = pageNumber.HasValue && pageNumber.Value > 0 ? pageNumber.Value : defaultPageNumber;
+            var size = numberOrProduct.HasValue && numberOrProduct.Value > 0 ? numberOrProduct.Value : defaultPageSize;
+
+            var (items, totalCount) = await _productService.GetAllAsync(page, size, cancellationToken);
+
+            var totalPages = (int)Math.Ceiling(totalCount / (double)size);
+
+            var result = new
+            {
+                PageNumber = page,
+                PageSize = size,
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                Items = items
+            };
+
+            return Ok(result);
         }
 
         [HttpGet("search")]
-        public IActionResult GetByProductName([FromQuery] string keyword)
+        public async Task<IActionResult> GetByProductName([FromQuery] string keyword, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to ProductsController.GetByProductName - keyword: {Keyword}", keyword);
-            var productsFound = _productService.SearchByNameOrProductId(keyword);
+            var productsFound = await _productService.SearchByNameOrProductIdAsync(keyword, cancellationToken);
             return Ok(productsFound);
         }
 
         //POST: api/products
-        //[Authorize]
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Create([FromBody] Product newProduct)
+        public async Task<IActionResult> Create([FromBody] Product newProduct, CancellationToken cancellationToken)
         {
             var validationResult = validator.Validate(newProduct);
 
@@ -48,26 +77,28 @@ namespace ASP.NET_Hands_on.Controllers
             }
 
             _logger.LogInformation("Run to ProductsController.Create - creating product {ProductId}", newProduct.ProductId);
-            var created = _productService.Create(newProduct);
+            var created = await _productService.CreateAsync(newProduct, cancellationToken);
             return CreatedAtAction(nameof(GetAll), new { id = created.Id }, created);
         }
 
         //POST: api/products/many
+        //[Authorize(Roles = "Admin")]
         [HttpPost("many")]
-        public IActionResult CreateMany([FromBody] List<Product> productList)
+        public async Task<IActionResult> CreateMany([FromBody] List<Product> productList, CancellationToken cancellationToken)
         {
             if (productList == null || productList.Count == 0)
             {
                 return BadRequest("Product list cannot be empty.");
             }
 
-            var created = _productService.CreateMany(productList);
+            var created = await _productService.CreateManyAsync(productList, cancellationToken);
             return CreatedAtAction(nameof(GetAll), null, created);
         }
 
         //PUT: api/products/5
+        //[Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Product updateData)
+        public async Task<IActionResult> Update(int id, [FromBody] Product updateData, CancellationToken cancellationToken)
         {
             var validationResult = validator.Validate(updateData);
 
@@ -76,49 +107,52 @@ namespace ASP.NET_Hands_on.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            try
-            {
-                _logger.LogInformation("Run to ProductsController.Update - id: {Id}", id);
-                var updated = _productService.Update(id, updateData);
-                if (updated == null) return NotFound("Product not found");
-                return Ok(updated);
-            }
-            catch (ArgumentException argumentExcemtion)
-            {
-                return BadRequest(argumentExcemtion.Message);
-            }
+            _logger.LogInformation("Run to ProductsController.Update - id: {Id}", id);
+            var updated = await _productService.UpdateAsync(id, updateData, cancellationToken);
+            return Ok(updated);
             
         }
 
+        //[Authorize(Roles = "Admin")]
         //PATCH: api/products/5
         [HttpPatch("{id}/update")]
-        public IActionResult Patch(int id, [FromQuery] ProductPatchRequest patchRequest)
+        public async Task<IActionResult> Patch(int id, [FromQuery] ProductPatchRequest patchRequest, CancellationToken cancellationToken)
         {
             var validationResult = new ProductPatchRequestValidator().Validate(patchRequest);
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
             }
-
-            try
-            {
-                var patched = _productService.Patch(id, patchRequest);
-                if (patched == null) return NotFound("Product not found");
-                return Ok(patched);
-            }
-            catch (ArgumentException argumentExcemtion)
-            {
-                return BadRequest(argumentExcemtion.Message);
-            }
+            var patched = await _productService.PatchAsync(id, patchRequest, cancellationToken);
+            return Ok(patched);
         }
 
+        //[Authorize(Roles = "Admin")]
         //DELETE: api/products/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
-            var deleted = _productService.Delete(id);
-            if (!deleted) return NotFound();
-            return NoContent();
+            await _productService.DeleteAsync(id, cancellationToken);
+            return Ok();
+        }
+
+        //GET: api/products/dummyjson
+        [HttpGet("dummyjson")]
+        public async Task<IActionResult> GetProductsFromDummyJson()
+        {
+            var response = await _productsFetchingApiByUrl.GetProducts();
+
+            if (response != null && response.Products.Count > 0)
+            {
+                return Ok(new
+                {
+                    Message = "Data fetching successfully!",
+                    TotalCount = response.Total,
+                    Data = response.Products
+                });
+            }
+
+            return BadRequest("Failed to fetch data from other API");
         }
     }
 }

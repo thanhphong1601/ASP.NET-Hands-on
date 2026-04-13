@@ -6,11 +6,12 @@ namespace ASP.NET_Hands_on.Model
     public class Order
     {
         public int OrderId { get; set; }
-        public List<Product> Products { get; set; } = new List<Product>();
 
         public decimal TotalPrice { get; set; }
 
-        public List<OrderProduct> OrderProducts { get; set; } = new();
+        public DateTime OrderDate { get; set; } = DateTime.UtcNow;
+
+        public List<OrderProduct> OrderProducts { get; set; } = new(); 
     }
 
     public class OrderValidator : AbstractValidator<Order>

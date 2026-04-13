@@ -61,7 +61,7 @@ namespace ASP.NET_Hands_on.Controllers
         {
             var deleted = await _orderService.DeleteOrderAsync(id, cancellationToken);
             if (!deleted) return NotFound();
-            return NoContent();
+            return Ok();
         }
     }
 }

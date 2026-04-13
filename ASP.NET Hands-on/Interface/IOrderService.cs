@@ -10,6 +10,6 @@ namespace ASP.NET_Hands_on.Interface
         Task<Order> CreateOrderAsync(List<int> productIds, CancellationToken cancellationToken);
         Task<bool> AddProductToOrderAsync(int orderId, int productId, int quantity, CancellationToken cancellationToken);
         Task<bool> DeleteOrderAsync(int orderId, CancellationToken cancellationToken);
-        void CalculateTotalPriceWhenAddOrRemoveProduct(int orderId);
+        Task CalculateTotalPriceWhenAddOrRemoveProduct(int orderId);
     }
 }

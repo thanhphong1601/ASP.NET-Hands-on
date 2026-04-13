@@ -12,6 +12,18 @@
           "Auth"
         ],
         "operationId": "Auth_Login",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
@@ -467,6 +479,27 @@
         }
       }
     },
+    "/api/Products/dummyjson": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "operationId": "Products_GetProductsFromDummyJson",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/WeatherForecast": {
       "get": {
         "tags": [
@@ -493,6 +526,26 @@
   },
   "components": {
     "schemas": {
+      "UserLoginRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "userName",
+          "password"
+        ],
+        "properties": {
+          "userName": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 30,
+            "minLength": 8
+          }
+        }
+      },
       "Product": {
         "type": "object",
         "additionalProperties": false,
@@ -516,6 +569,30 @@
           "price": {
             "type": "number",
             "format": "decimal"
+          },
+          "orderProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderProduct"
+            }
+          }
+        }
+      },
+      "OrderProduct": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "orderId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
