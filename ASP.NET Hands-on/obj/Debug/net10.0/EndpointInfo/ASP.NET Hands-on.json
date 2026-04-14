@@ -70,10 +70,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -98,13 +97,12 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -144,10 +142,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -160,15 +157,11 @@
         ],
         "operationId": "Orders_CreateOrder",
         "requestBody": {
-          "x-name": "productIds",
+          "x-name": "request",
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int32"
-                }
+                "$ref": "#/components/schemas/OrderCreateRequest"
               }
             }
           },
@@ -176,13 +169,12 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -212,10 +204,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -243,10 +234,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -293,13 +283,12 @@
           }
         ],
         "responses": {
-          "200": {
+          "204": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -339,10 +328,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -367,13 +355,12 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -401,10 +388,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -434,13 +420,12 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -482,10 +467,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -513,10 +497,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -564,10 +547,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
                 }
               }
             }
@@ -642,6 +624,28 @@
           }
         }
       },
+      "ApiResponseOfObject": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "objectType": {
+            "type": "string"
+          },
+          "data": {
+            "nullable": true
+          }
+        }
+      },
       "DiscountDayRequestDto": {
         "type": "object",
         "additionalProperties": false,
@@ -667,6 +671,22 @@
               "type": "integer",
               "format": "int32"
             }
+          }
+        }
+      },
+      "OrderCreateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "productIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "email": {
+            "type": "string"
           }
         }
       },

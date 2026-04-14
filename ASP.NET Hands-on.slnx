@@ -1,3 +1,7 @@
 <Solution>
-  <Project Path="ASP.NET Hands-on/ASP.NET Hands-on.csproj" />
+  <Project Path="Application/Application.csproj" Id="80982964-b956-4f74-8629-d7e0a634fcc2" />
+  <Project Path="ASP.NET Hands-on/API.csproj" />
+  <Project Path="Domain/Domain.csproj" Id="44c737fa-098c-4869-ab7c-68eb37ff479c" />
+  <Project Path="Infrastructure/Infrastructure.csproj" Id="ef3b2ff3-fd38-4142-bf20-3a82924c58f1" />
+  <Project Path="Persistence/Persistence.csproj" Id="b7cab038-d72f-4c51-b466-854c89d605ec" />
 </Solution>

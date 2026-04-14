@@ -119,6 +119,11 @@ builder.Services.AddScoped<IDiscountDayService, DiscountDayService>();
 // memory cache
 builder.Services.AddMemoryCache();
 
+// background email queue and hosted service
+builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundEmailQueue>();
+builder.Services.AddHostedService<EmailBackgroundService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 // register health check
 builder.Services.AddHealthChecks();
 
@@ -202,6 +207,16 @@ app.MapHealthChecks("/health", new HealthCheckOptions
         await JsonSerializer.SerializeAsync(context.Response.Body, response);
     }
 });
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/error");
+    
+    app.UseHsts();
+}
+{
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

@@ -486,4 +486,7 @@ C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\A
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\obj\Debug\net10.0\ASP.NET Hands-on.RazorAssemblyInfo.cache
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\obj\Debug\net10.0\ASP.NET Hands-on.RazorAssemblyInfo.cs
+C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\bin\Debug\net10.0\BouncyCastle.Cryptography.dll
+C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\bin\Debug\net10.0\MailKit.dll
+C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\bin\Debug\net10.0\MimeKit.dll
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

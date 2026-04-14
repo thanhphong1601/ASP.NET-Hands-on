@@ -30,7 +30,9 @@ namespace ASP.NET_Hands_on.Controllers
         // api/products?pageNumber=1&numberOrProduct=30
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int? pageNumber, [FromQuery] int? numberOrProduct, CancellationToken cancellationToken)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<Model.ApiResponse<object>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? numberOrProduct, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to ProductsController.GetAll");
             // read defaults from configuration
@@ -58,7 +60,9 @@ namespace ASP.NET_Hands_on.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> GetByProductName([FromQuery] string keyword, CancellationToken cancellationToken)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<Model.ApiResponse<object>>> GetByProductName([FromQuery] string keyword, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to ProductsController.GetByProductName - keyword: {Keyword}", keyword);
             var productsFound = await _productService.SearchByNameOrProductIdAsync(keyword, cancellationToken);
@@ -69,7 +73,9 @@ namespace ASP.NET_Hands_on.Controllers
         //POST: api/products
         //[Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Product newProduct, CancellationToken cancellationToken)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status201Created)]
+        public async Task<ActionResult<Model.ApiResponse<object>>> Create([FromBody] Product newProduct, CancellationToken cancellationToken)
         {
             var validationResult = validator.Validate(newProduct);
 
@@ -86,7 +92,9 @@ namespace ASP.NET_Hands_on.Controllers
         //POST: api/products/many
         //[Authorize(Roles = "Admin")]
         [HttpPost("many")]
-        public async Task<IActionResult> CreateMany([FromBody] List<Product> productList, CancellationToken cancellationToken)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status201Created)]
+        public async Task<ActionResult<Model.ApiResponse<object>>> CreateMany([FromBody] List<Product> productList, CancellationToken cancellationToken)
         {
             if (productList == null || productList.Count == 0)
             {
@@ -101,7 +109,9 @@ namespace ASP.NET_Hands_on.Controllers
         //PUT: api/products/5
         //[Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Product updateData, CancellationToken cancellationToken)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<Model.ApiResponse<object>>> Update(int id, [FromBody] Product updateData, CancellationToken cancellationToken)
         {
             var validationResult = validator.Validate(updateData);
 
@@ -120,7 +130,9 @@ namespace ASP.NET_Hands_on.Controllers
         //[Authorize(Roles = "Admin")]
         //PATCH: api/products/5
         [HttpPatch("{id}/update")]
-        public async Task<IActionResult> Patch(int id, [FromQuery] ProductPatchRequest patchRequest, CancellationToken cancellationToken)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<Model.ApiResponse<object>>> Patch(int id, [FromQuery] ProductPatchRequest patchRequest, CancellationToken cancellationToken)
         {
             var validationResult = new ProductPatchRequestValidator().Validate(patchRequest);
             if (!validationResult.IsValid)
@@ -135,7 +147,9 @@ namespace ASP.NET_Hands_on.Controllers
         //[Authorize(Roles = "Admin")]
         //DELETE: api/products/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<Model.ApiResponse<object>>> Delete(int id, CancellationToken cancellationToken)
         {
             await _productService.DeleteAsync(id, cancellationToken);
             var apiResp = new ApiResponse<object>(null, 200, "Deleted");

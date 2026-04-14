@@ -56,7 +56,7 @@ namespace ASP.NET_Hands_on.Service
 
        
 
-        public async Task<Order> CreateOrderAsync(List<int> productIds, CancellationToken cancellationToken)
+        public async Task<Order> CreateOrderAsync(List<int> productIds, string email, CancellationToken cancellationToken)
         {
             _logger.LogInformation("OrderService.CreateOrderAsync - creating order with {Count} productIds", productIds?.Count ?? 0);
 

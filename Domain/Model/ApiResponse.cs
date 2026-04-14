@@ -7,7 +7,7 @@ namespace ASP.NET_Hands_on.Model
         public bool Success { get; set; }
         public int StatusCode { get; set; }
         public string Message { get; set; } = string.Empty;
-        public string ObjectType { get; set; } = string.Empty;
+        public string ObjectType { get; set; } = string.Empty;//*
         public T? Data { get; set; }
 
         public ApiResponse() { }

@@ -44,6 +44,8 @@ namespace ASP.NET_Hands_on.DatabseContext
                 .HasOne(ddp => ddp.Product)
                 .WithMany(p => p.DiscountDayProducts)
                 .HasForeignKey(ddp => ddp.ProductId);
+
+            //SeedData();
         }
     }
 }

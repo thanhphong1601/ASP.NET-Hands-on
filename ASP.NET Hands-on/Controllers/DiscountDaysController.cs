@@ -17,7 +17,9 @@ namespace ASP.NET_Hands_on.Controllers
 
         // GET: api/discountdays
         [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<Model.ApiResponse<object>>> GetAll(CancellationToken cancellationToken)
         {
             var items = await _service.GetAllAsync(cancellationToken);
             var apiResp = new Model.ApiResponse<object>(items, 200, "Request successful");
@@ -26,7 +28,9 @@ namespace ASP.NET_Hands_on.Controllers
 
         // POST: api/discountdays
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] DiscountDayRequestDto dto, CancellationToken cancellationToken)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status201Created)]
+        public async Task<ActionResult<Model.ApiResponse<object>>> Create([FromBody] DiscountDayRequestDto dto, CancellationToken cancellationToken)
         {
             var created = await _service.CreateAsync(dto, cancellationToken);
             var apiResp = new Model.ApiResponse<object>(created, 201, "Created");
