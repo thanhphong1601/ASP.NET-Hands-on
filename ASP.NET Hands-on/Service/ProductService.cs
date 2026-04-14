@@ -24,12 +24,12 @@ namespace ASP.NET_Hands_on.Service
             _db = db;
         }
 
-        public async Task<(List<Product> Items, int TotalCount)> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
+        public async Task<(List<ProductDto> Items, int TotalCount)> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
             _logger.LogInformation("ProductService.GetAllAsync - retrieving paged products page {Page} size {Size}", pageNumber, pageSize);
 
             if (pageNumber <= 0) pageNumber = 1;
-            if (pageSize <= 0) pageSize = 10;
+            if (pageSize <= 0) pageSize = 30;
 
             var totalCount = await _db.Products.AsNoTracking().CountAsync(cancellationToken);
 
@@ -38,20 +38,23 @@ namespace ASP.NET_Hands_on.Service
                 .OrderBy(p => p.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
+                .Select(p => new ProductDto(p.ProductId, p.Name, p.Price))
                 .ToListAsync(cancellationToken);
+            //                .Select(p => new ProductDto(p.ProductId, p.Name, p.Price))
 
             return (items, totalCount);
         }
 
-        public async Task<List<Product>> SearchByNameOrProductIdAsync(string keyword, CancellationToken cancellationToken)
+        public async Task<List<ProductDto>> SearchByNameOrProductIdAsync(string keyword, CancellationToken cancellationToken)
         {
             _logger.LogInformation("ProductService.SearchByNameOrProductIdAsync - keyword: {Keyword}", keyword);
-            if (string.IsNullOrWhiteSpace(keyword)) return new List<Product>();
+            if (string.IsNullOrWhiteSpace(keyword)) return new List<ProductDto>();
 
             var q = keyword.Trim();
             return await _db.Products
                 .AsNoTracking()
                 .Where(p => EF.Functions.Like(p.Name, $"%{q}%") || EF.Functions.Like(p.ProductId, $"%{q}%"))
+                .Select(p => new ProductDto(p.ProductId, p.Name, p.Price))
                 .ToListAsync(cancellationToken);
         }
 

@@ -10,6 +10,8 @@ namespace ASP.NET_Hands_on.DatabseContext
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }
+        public DbSet<DiscountDay> DiscountDays { get; set; }
+        public DbSet<DiscountDayProduct> DiscountDayProducts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +30,20 @@ namespace ASP.NET_Hands_on.DatabseContext
                 .HasOne(op => op.Product)
                 .WithMany(p => p.OrderProducts)
                 .HasForeignKey(op => op.ProductId);
+
+            // DiscountDayProduct relationship
+            modelBuilder.Entity<DiscountDayProduct>()
+                .HasKey(ddp => new { ddp.DiscountDayId, ddp.ProductId });
+
+            modelBuilder.Entity<DiscountDayProduct>()
+                .HasOne(ddp => ddp.DiscountDay)
+                .WithMany(dd => dd.DiscountDayProducts)
+                .HasForeignKey(ddp => ddp.DiscountDayId);
+
+            modelBuilder.Entity<DiscountDayProduct>()
+                .HasOne(ddp => ddp.Product)
+                .WithMany(p => p.DiscountDayProducts)
+                .HasForeignKey(ddp => ddp.ProductId);
         }
     }
 }

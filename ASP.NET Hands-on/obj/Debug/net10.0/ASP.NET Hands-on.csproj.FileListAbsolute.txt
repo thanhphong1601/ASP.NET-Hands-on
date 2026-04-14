@@ -366,7 +366,6 @@ C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\A
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\bin\Debug\net10.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\bin\Debug\net10.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\bin\Debug\net10.0\runtimes\win-x86\native\e_sqlite3.dll
-C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\bin\Debug\net10.0\Refit.dll
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\bin\Debug\net10.0\Refit.HttpClientFactory.dll
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\bin\Debug\net10.0\Microsoft.AspNetCore.Razor.Language.dll
@@ -487,3 +486,4 @@ C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\A
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\obj\Debug\net10.0\ASP.NET Hands-on.RazorAssemblyInfo.cache
 C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\obj\Debug\net10.0\ASP.NET Hands-on.RazorAssemblyInfo.cs
+C:\Users\phong.nguyen2\OneDrive - Orient\Desktop\Mock Project\ASP.NET Hands-on\ASP.NET Hands-on\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

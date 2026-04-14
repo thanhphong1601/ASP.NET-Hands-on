@@ -114,6 +114,10 @@ builder.Services.AddOpenApiDocument();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddScoped<IDiscountDayService, DiscountDayService>();
+
+// memory cache
+builder.Services.AddMemoryCache();
 
 // register health check
 builder.Services.AddHealthChecks();

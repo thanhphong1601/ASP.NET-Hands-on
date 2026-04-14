@@ -13,6 +13,7 @@ namespace ASP.NET_Hands_on.Model
         public decimal Price { get; set; } = decimal.Zero;
 
         public List<OrderProduct> OrderProducts { get; set; } = new();
+        public List<DiscountDayProduct> DiscountDayProducts { get; set; } = new();
     }
 
     public class ProductValidator : AbstractValidator<Product>

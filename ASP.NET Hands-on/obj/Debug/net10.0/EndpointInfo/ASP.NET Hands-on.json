@@ -60,12 +60,86 @@
         }
       }
     },
+    "/api/DiscountDays": {
+      "get": {
+        "tags": [
+          "DiscountDays"
+        ],
+        "operationId": "DiscountDays_GetAll",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "DiscountDays"
+        ],
+        "operationId": "DiscountDays_Create",
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscountDayRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Orders": {
       "get": {
         "tags": [
           "Orders"
         ],
         "operationId": "Orders_GetAll",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -239,6 +313,28 @@
           "Products"
         ],
         "operationId": "Products_GetAll",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "numberOrProduct",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -546,6 +642,34 @@
           }
         }
       },
+      "DiscountDayRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "dayName": {
+            "type": "string"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fromDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "toDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "productIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
       "Product": {
         "type": "object",
         "additionalProperties": false,
@@ -575,6 +699,12 @@
             "items": {
               "$ref": "#/components/schemas/OrderProduct"
             }
+          },
+          "discountDayProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscountDayProduct"
+            }
           }
         }
       },
@@ -593,6 +723,57 @@
           "quantity": {
             "type": "integer",
             "format": "int32"
+          }
+        }
+      },
+      "DiscountDayProduct": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "discountDayId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "discountDay": {
+            "$ref": "#/components/schemas/DiscountDay"
+          },
+          "productId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "product": {
+            "$ref": "#/components/schemas/Product"
+          }
+        }
+      },
+      "DiscountDay": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dayName": {
+            "type": "string"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fromDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "toDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "discountDayProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscountDayProduct"
+            }
           }
         }
       },

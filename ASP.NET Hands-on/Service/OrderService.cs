@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using ASP.NET_Hands_on.DatabseContext;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
+using ASP.NET_Hands_on.DTO;
 
 namespace ASP.NET_Hands_on.Service
 {
@@ -96,6 +97,11 @@ namespace ASP.NET_Hands_on.Service
             await _db.SaveChangesAsync(cancellationToken);
             await CalculateTotalPriceWhenAddOrRemoveProduct(newOrder.OrderId);
 
+            var createdOrder = new OrderDetailDto(newOrder.OrderId, 
+                newOrder.OrderDate, 
+                newOrder.TotalPrice, 
+                validProducts.Values.Select(p => new ProductDto(p.ProductId, p.Name ?? string.Empty, p.Price)).ToList());
+
             _logger.LogInformation("OrderService.CreateOrderAsync - created order {OrderId}", newOrder.OrderId);
             return newOrder;
         }
@@ -107,34 +113,37 @@ namespace ASP.NET_Hands_on.Service
             var order = await _db.Orders
                 .AsNoTracking()
                 .Include(o => o.OrderProducts)
-                    .ThenInclude(op => op.Product)
+                .ThenInclude(op => op.Product)
                 .FirstOrDefaultAsync(o => o.OrderId == orderId, cancellationToken);
 
             if (order == null) throw new KeyNotFoundException($"Order with id {orderId} was not found.");
 
             var products = order.OrderProducts
-                .Select(op => new
-                {
-                    productId = op.Product.ProductId,
-                    price = op.Product.Price,
-                    quantity = op.Quantity
-                })
+                .Select(op => new ProductDto(op.Product.ProductId, op.Product.Name ?? string.Empty, op.Product.Price))
                 .ToList();
 
-            var orderDetails = new
-            {
-                orderId = order.OrderId,
-                totalPrice = order.TotalPrice,
-                products
-            };
+            var orderDetails = new DTO.OrderDetailDto(order.OrderId, order.OrderDate, order.TotalPrice, products);
 
             return orderDetails;
         }
 
-        public async Task<List<Order>> GetOrdersAsync(CancellationToken cancellationToken)
+        public async Task<(List<Order> Items, int TotalCount)> GetOrdersAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("OrderService.GetOrdersAsync - retrieving all orders from db");
-            return await _db.Orders.AsNoTracking().ToListAsync(cancellationToken);
+            _logger.LogInformation("OrderService.GetOrdersAsync - retrieving paged orders page {Page} size {Size}", pageNumber, pageSize);
+
+            if (pageNumber <= 0) pageNumber = 1;
+            if (pageSize <= 0) pageSize = 30;
+
+            var totalCount = await _db.Orders.AsNoTracking().CountAsync(cancellationToken);
+
+            var items = await _db.Orders
+                .AsNoTracking()
+                .OrderBy(o => o.OrderId)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return (items, totalCount);
         }
 
         public async Task CalculateTotalPriceWhenAddOrRemoveProduct(int orderId)

@@ -27,8 +27,7 @@ namespace ASP.NET_Hands_on.Controllers
         /// <summary>
         /// This api is used to get all products in database, only admin can access this api, if you want to test, please login with admin account to get token and add it to header with key "Authorization" and value "Bearer {token}"
         /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
+        // api/products?pageNumber=1&numberOrProduct=30
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int? pageNumber, [FromQuery] int? numberOrProduct, CancellationToken cancellationToken)
@@ -36,7 +35,7 @@ namespace ASP.NET_Hands_on.Controllers
             _logger.LogInformation("Run to ProductsController.GetAll");
             // read defaults from configuration
             var defaultPageNumber = _configuration.GetValue<int?>("Paging:PageNumber") ?? 1;
-            var defaultPageSize = _configuration.GetValue<int?>("Paging:PageSize") ?? 10;
+            var defaultPageSize = _configuration.GetValue<int?>("Paging:PageSize") ?? 30;
 
             var page = pageNumber.HasValue && pageNumber.Value > 0 ? pageNumber.Value : defaultPageNumber;
             var size = numberOrProduct.HasValue && numberOrProduct.Value > 0 ? numberOrProduct.Value : defaultPageSize;
@@ -45,7 +44,7 @@ namespace ASP.NET_Hands_on.Controllers
 
             var totalPages = (int)Math.Ceiling(totalCount / (double)size);
 
-            var result = new
+            var pageResult = new
             {
                 PageNumber = page,
                 PageSize = size,
@@ -54,7 +53,8 @@ namespace ASP.NET_Hands_on.Controllers
                 Items = items
             };
 
-            return Ok(result);
+            var apiResp = new ApiResponse<object>(pageResult, 200, "Request successful");
+            return StatusCode(apiResp.StatusCode, apiResp);
         }
 
         [HttpGet("search")]
@@ -62,7 +62,8 @@ namespace ASP.NET_Hands_on.Controllers
         {
             _logger.LogInformation("Run to ProductsController.GetByProductName - keyword: {Keyword}", keyword);
             var productsFound = await _productService.SearchByNameOrProductIdAsync(keyword, cancellationToken);
-            return Ok(productsFound);
+            var apiResp = new ApiResponse<object>(productsFound, 200, "Request successful");
+            return Ok(apiResp);
         }
 
         //POST: api/products
@@ -78,7 +79,8 @@ namespace ASP.NET_Hands_on.Controllers
 
             _logger.LogInformation("Run to ProductsController.Create - creating product {ProductId}", newProduct.ProductId);
             var created = await _productService.CreateAsync(newProduct, cancellationToken);
-            return CreatedAtAction(nameof(GetAll), new { id = created.Id }, created);
+            var apiResp = new ApiResponse<object>(created, 201, "Created");
+            return CreatedAtAction(nameof(GetAll), new { id = created.Id }, apiResp);
         }
 
         //POST: api/products/many
@@ -92,7 +94,8 @@ namespace ASP.NET_Hands_on.Controllers
             }
 
             var created = await _productService.CreateManyAsync(productList, cancellationToken);
-            return CreatedAtAction(nameof(GetAll), null, created);
+            var apiResp = new ApiResponse<object>(created, 201, "Created");
+            return CreatedAtAction(nameof(GetAll), null, apiResp);
         }
 
         //PUT: api/products/5
@@ -109,7 +112,8 @@ namespace ASP.NET_Hands_on.Controllers
 
             _logger.LogInformation("Run to ProductsController.Update - id: {Id}", id);
             var updated = await _productService.UpdateAsync(id, updateData, cancellationToken);
-            return Ok(updated);
+            var apiResp = new ApiResponse<object>(updated, 200, "Updated");
+            return Ok(apiResp);
             
         }
 
@@ -124,7 +128,8 @@ namespace ASP.NET_Hands_on.Controllers
                 return BadRequest(validationResult.Errors);
             }
             var patched = await _productService.PatchAsync(id, patchRequest, cancellationToken);
-            return Ok(patched);
+            var apiResp = new ApiResponse<object>(patched, 200, "Patched");
+            return Ok(apiResp);
         }
 
         //[Authorize(Roles = "Admin")]
@@ -133,7 +138,8 @@ namespace ASP.NET_Hands_on.Controllers
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
             await _productService.DeleteAsync(id, cancellationToken);
-            return Ok();
+            var apiResp = new ApiResponse<object>(null, 200, "Deleted");
+            return Ok(apiResp);
         }
 
         //GET: api/products/dummyjson
@@ -144,15 +150,18 @@ namespace ASP.NET_Hands_on.Controllers
 
             if (response != null && response.Products.Count > 0)
             {
-                return Ok(new
+                var data = new
                 {
                     Message = "Data fetching successfully!",
                     TotalCount = response.Total,
                     Data = response.Products
-                });
+                };
+                var apiResp = new ApiResponse<object>(data, 200, "Request successful");
+                return Ok(apiResp);
             }
 
-            return BadRequest("Failed to fetch data from other API");
+            var apiErr = new ApiResponse<object>(null, 400, "Failed to fetch data from other API");
+            return BadRequest(apiErr);
         }
     }
 }
