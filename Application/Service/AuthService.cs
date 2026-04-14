@@ -1,7 +1,5 @@
-﻿using ASP.NET_Hands_on.DatabseContext;
-using ASP.NET_Hands_on.Interface;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using ASP.NET_Hands_on.Interface;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,20 +10,16 @@ namespace ASP.NET_Hands_on.Service
     public class AuthService : IAuthService
     {
         private readonly ILogger<ProductService> _logger;
-        private readonly AppDbContext _db;
-        private readonly IConfiguration _configuration;
 
-        public AuthService(ILogger<ProductService> logger, AppDbContext db, IConfiguration configuration)
+        public AuthService(ILogger<ProductService> logger)
         {
             _logger = logger;
-            _db = db;
-            _configuration = configuration;
         }
 
 
         public async Task<bool> ValidateUserAsync(string username, string password, CancellationToken cancellationToken)
         {
-            if (username == _configuration["AdminAccount:Username"] && password == _configuration["AdminAccount:Password"])
+            if (username == "Admin" && password == "Admin@123")
             {
                 return true;
             }

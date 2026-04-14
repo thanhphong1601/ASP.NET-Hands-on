@@ -3,20 +3,32 @@
   "WorkspaceRootPath": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{B7CAB038-D72F-4C51-B466-854C89D605EC}|Persistence\\Persistence.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\persistence\\persistence.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{B7CAB038-D72F-4C51-B466-854C89D605EC}|Persistence\\Persistence.csproj|solutionrelative:persistence\\persistence.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\application\\application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|solutionrelative:application\\application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{44C737FA-098C-4869-AB7C-68EB37FF479C}|Domain\\Domain.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\domain\\domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{44C737FA-098C-4869-AB7C-68EB37FF479C}|Domain\\Domain.csproj|solutionrelative:domain\\domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\application\\application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|solutionrelative:application\\application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{44C737FA-098C-4869-AB7C-68EB37FF479C}|Domain\\Domain.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\domain\\model\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{44C737FA-098C-4869-AB7C-68EB37FF479C}|Domain\\Domain.csproj|solutionrelative:domain\\model\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EF3B2FF3-FD38-4142-BF20-3A82924C58F1}|Infrastructure\\Infrastructure.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\infrastructure\\infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{EF3B2FF3-FD38-4142-BF20-3A82924C58F1}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6C7AD325-E1F2-DC3B-2BAF-DDE1F9D155E5}|ASP.NET Hands-on\\API.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\asp.net hands-on\\api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{6C7AD325-E1F2-DC3B-2BAF-DDE1F9D155E5}|ASP.NET Hands-on\\API.csproj|solutionrelative:asp.net hands-on\\api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6C7AD325-E1F2-DC3B-2BAF-DDE1F9D155E5}|ASP.NET Hands-on\\API.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\asp.net hands-on\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6C7AD325-E1F2-DC3B-2BAF-DDE1F9D155E5}|ASP.NET Hands-on\\API.csproj|solutionrelative:asp.net hands-on\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B7CAB038-D72F-4C51-B466-854C89D605EC}|Persistence\\Persistence.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\persistence\\persistence.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{B7CAB038-D72F-4C51-B466-854C89D605EC}|Persistence\\Persistence.csproj|solutionrelative:persistence\\persistence.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,8 +38,47 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 4,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Order.cs",
+              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Domain\\Model\\Order.cs",
+              "RelativeDocumentMoniker": "Domain\\Model\\Order.cs",
+              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Domain\\Model\\Order.cs",
+              "RelativeToolTip": "Domain\\Model\\Order.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-14T09:37:10.646Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "API",
+              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\API.csproj",
+              "RelativeDocumentMoniker": "ASP.NET Hands-on\\API.csproj",
+              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\API.csproj",
+              "RelativeToolTip": "ASP.NET Hands-on\\API.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-04-14T09:33:56.658Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Program.cs",
+              "RelativeDocumentMoniker": "ASP.NET Hands-on\\Program.cs",
+              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Program.cs",
+              "RelativeToolTip": "ASP.NET Hands-on\\Program.cs",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-14T09:33:51.922Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 3,
@@ -36,20 +87,20 @@
               "RelativeDocumentMoniker": "Infrastructure\\Infrastructure.csproj",
               "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Infrastructure\\Infrastructure.csproj",
               "RelativeToolTip": "Infrastructure\\Infrastructure.csproj",
-              "ViewState": "AgIAAAoAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2026-04-14T09:16:02.867Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Application",
               "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Application.csproj",
               "RelativeDocumentMoniker": "Application\\Application.csproj",
               "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Application.csproj",
               "RelativeToolTip": "Application\\Application.csproj",
-              "ViewState": "AgIAAA0AAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2026-04-14T09:15:56.529Z",
               "EditorCaption": ""
@@ -62,20 +113,20 @@
               "RelativeDocumentMoniker": "Domain\\Domain.csproj",
               "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Domain\\Domain.csproj",
               "RelativeToolTip": "Domain\\Domain.csproj",
-              "ViewState": "AgIAAAoAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2026-04-14T09:15:47.435Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 6,
               "Title": "Persistence",
               "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Persistence\\Persistence.csproj",
               "RelativeDocumentMoniker": "Persistence\\Persistence.csproj",
               "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Persistence\\Persistence.csproj",
               "RelativeToolTip": "Persistence\\Persistence.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAEwB0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2026-04-14T09:03:47.022Z",
               "EditorCaption": ""

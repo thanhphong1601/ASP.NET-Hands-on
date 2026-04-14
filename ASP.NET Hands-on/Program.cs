@@ -1,3 +1,4 @@
+using Application;
 using ASP.NET_Hands_on.Data;
 using ASP.NET_Hands_on.DatabseContext;
 using ASP.NET_Hands_on.Exceptions;
@@ -123,6 +124,9 @@ builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundEmailQueue>();
 builder.Services.AddHostedService<EmailBackgroundService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+
+//Add properties for below projects
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
 // register health check
 builder.Services.AddHealthChecks();

@@ -2979,7 +2979,14 @@
           "Domain": "1.0.0",
           "FluentValidation": "12.1.1",
           "MediatR": "14.1.0",
-          "Riok.Mapperly": "4.3.1"
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "10.0.5",
+          "Microsoft.AspNetCore.Authentication.Negotiate": "10.0.5",
+          "Refit.HttpClientFactory": "10.1.6",
+          "Riok.Mapperly": "4.3.1",
+          "Serilog": "4.3.1",
+          "Serilog.AspNetCore": "10.0.0",
+          "Serilog.Sinks.Console": "6.1.1",
+          "Serilog.Sinks.File": "7.0.0"
         },
         "compile": {
           "bin/placeholder/Application.dll": {}
@@ -2991,6 +2998,9 @@
       "Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "FluentValidation": "12.1.1"
+        },
         "compile": {
           "bin/placeholder/Domain.dll": {}
         },
@@ -3002,7 +3012,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Domain": "1.0.0",
+          "Application": "1.0.0",
           "MailKit": "4.15.1",
           "Refit.HttpClientFactory": "10.1.6"
         },

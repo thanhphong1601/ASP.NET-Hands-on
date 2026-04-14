@@ -1,6 +1,4 @@
-﻿using ASP.NET_Hands_on.ClientSideDatabase;
-using ASP.NET_Hands_on.Enum;
-using ASP.NET_Hands_on.Interface;
+﻿using ASP.NET_Hands_on.Interface;
 using ASP.NET_Hands_on.Model;
 using Microsoft.Extensions.Logging;
 using ASP.NET_Hands_on.DatabseContext;

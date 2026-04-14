@@ -1,5 +1,4 @@
-﻿using ASP.NET_Hands_on.Enum;
-using ASP.NET_Hands_on.Model;
+﻿using ASP.NET_Hands_on.Model;
 
 namespace ASP.NET_Hands_on.Interface
 {
