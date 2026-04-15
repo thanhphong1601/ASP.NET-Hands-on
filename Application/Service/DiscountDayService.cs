@@ -1,20 +1,20 @@
-using ASP.NET_Hands_on.Interface;
-using ASP.NET_Hands_on.DTO;
-using ASP.NET_Hands_on.Model;
-using ASP.NET_Hands_on.DatabseContext;
+using ASP.NET_Hands_on.Application.Interface;
+using ASP.NET_Hands_on.Application.DTO;
+using ASP.NET_Hands_on.Domain.Model;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using ASP.NET_Hands_on.Application.IRepository;
 
-namespace ASP.NET_Hands_on.Service
+namespace ASP.NET_Hands_on.Application.Service
 {
     public class DiscountDayService : IDiscountDayService
     {
-        private readonly ASP.NET_Hands_on.Persistence.Interface.IDiscountDayRepository _discountDayRepository;
+        private readonly IDiscountDayRepository _discountDayRepository;
         private readonly ILogger<DiscountDayService> _logger;
         private readonly IMemoryCache _cache;
         private const string CACHE_KEY = "DiscountDay_All";
 
-        public DiscountDayService(ASP.NET_Hands_on.Persistence.Interface.IDiscountDayRepository discountDayRepository, ILogger<DiscountDayService> logger, IMemoryCache cache)
+        public DiscountDayService(IDiscountDayRepository discountDayRepository, ILogger<DiscountDayService> logger, IMemoryCache cache)
         {
             _discountDayRepository = discountDayRepository;
             _logger = logger;

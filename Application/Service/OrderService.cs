@@ -1,19 +1,18 @@
-﻿using ASP.NET_Hands_on.Interface;
-using ASP.NET_Hands_on.Model;
+﻿using ASP.NET_Hands_on.Application.Interface;
+using ASP.NET_Hands_on.Domain.Model;
 using Microsoft.Extensions.Logging;
-using ASP.NET_Hands_on.DatabseContext;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
-using ASP.NET_Hands_on.DTO;
+using ASP.NET_Hands_on.Application.DTO;
+using ASP.NET_Hands_on.Application.IRepository;
 
-namespace ASP.NET_Hands_on.Service
+namespace ASP.NET_Hands_on.Application.Service
 {
     public class OrderService : IOrderService
     {
         private readonly ILogger<OrderService> _logger;
-        private readonly ASP.NET_Hands_on.Persistence.Interface.IOrderRepository _orderRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public OrderService(ILogger<OrderService> logger, ASP.NET_Hands_on.Persistence.Interface.IOrderRepository orderRepository)
+        public OrderService(ILogger<OrderService> logger, IOrderRepository orderRepository)
         {
             _logger = logger;
             _orderRepository = orderRepository;

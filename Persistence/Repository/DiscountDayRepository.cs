@@ -1,12 +1,12 @@
-using ASP.NET_Hands_on.DTO;
-using ASP.NET_Hands_on.Model;
-using ASP.NET_Hands_on.Persistence.Interface;
+using ASP.NET_Hands_on.Application.DTO;
 using ASP.NET_Hands_on.DatabseContext;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ASP.NET_Hands_on.Application.IRepository;
+using ASP.NET_Hands_on.Domain.Model;
 
 namespace ASP.NET_Hands_on.Persistence.Repository
 {

@@ -1,6 +1,6 @@
-﻿using ASP.NET_Hands_on.Interface;
-using ASP.NET_Hands_on.Model;
-using ASP.NET_Hands_on.DTO;
+﻿using ASP.NET_Hands_on.Application.Interface;
+using ASP.NET_Hands_on.Domain.Model;
+using ASP.NET_Hands_on.Application.DTO;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -27,8 +27,8 @@ namespace ASP.NET_Hands_on.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<Model.ApiResponse<object>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<object>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to OrdersController.GetAll");
 
@@ -51,19 +51,19 @@ namespace ASP.NET_Hands_on.Controllers
                 Items = items
             };
 
-            var apiResp = new Model.ApiResponse<object>(pageResult, 200, "Request successful");
+            var apiResp = new ApiResponse<object>(pageResult, 200, "Request successful");
             return StatusCode(apiResp.StatusCode, apiResp);
         }
 
         [HttpGet("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<Model.ApiResponse<object>>> GetById(int id, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<object>>> GetById(int id, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to OrdersController.GetById - Id: {id}", id);
 
             var order = await _orderService.GetOrderByIdAsync(id, cancellationToken);
-            var apiResp = new Model.ApiResponse<object>(order, 200, "Request successful");
+            var apiResp = new ApiResponse<object>(order, 200, "Request successful");
             return Ok(apiResp);
 
         }
@@ -71,26 +71,26 @@ namespace ASP.NET_Hands_on.Controllers
         // CLient only needs to send a List consisting of products' id: [1, 2, 1]
         [HttpPost]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status201Created)]
-        public async Task<ActionResult<Model.ApiResponse<object>>> CreateOrder([FromBody] OrderCreateRequest request, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status201Created)]
+        public async Task<ActionResult<ApiResponse<object>>> CreateOrder([FromBody] OrderCreateRequest request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to OrdersController.CreateOrder - List Of Product Id: {@Ids}", request.ProductIds);
 
             if (string.IsNullOrWhiteSpace(request.Email))
             {
-                return BadRequest(new Model.ApiResponse<object>(null, 400, "Email is required"));
+                return BadRequest(new ApiResponse<object>(null, 400, "Email is required"));
             }
 
             if (!_emailService.CheckValidEmail(request.Email))
             {
-                return BadRequest(new Model.ApiResponse<object>(null, 400, "Invalid email address"));
+                return BadRequest(new ApiResponse<object>(null, 400, "Invalid email address"));
             }
 
             var order = await _orderService.CreateOrderAsync(request.ProductIds, request.Email, cancellationToken);
 
             // enqueue email job
             var queue = HttpContext.RequestServices.GetRequiredService<IBackgroundTaskQueue>();
-            var emailJob = new Model.EmailJob
+            var emailJob = new EmailJob
             {
                 To = request.Email,
                 Subject = $"Order Confirmation #{order.OrderId}",
@@ -98,13 +98,13 @@ namespace ASP.NET_Hands_on.Controllers
             };
             await queue.QueueEmailAsync(emailJob);
 
-            var apiResp = new Model.ApiResponse<object>(order, 201, "Created");
+            var apiResp = new ApiResponse<object>(order, 201, "Created");
             return CreatedAtAction(nameof(GetById), new { id = order.OrderId }, apiResp);
         }
 
         [HttpPost("{orderId}/products/{productId}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> AddProductToOrder(int orderId, int productId, [FromQuery] int quantity = 1, CancellationToken cancellationToken = default)
         {
 
@@ -116,8 +116,8 @@ namespace ASP.NET_Hands_on.Controllers
 
         [HttpDelete("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<Model.ApiResponse<object>>> Delete(int id, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<object>>> Delete(int id, CancellationToken cancellationToken)
         {
             var deleted = await _orderService.DeleteOrderAsync(id, cancellationToken);
             if (!deleted) return NotFound();

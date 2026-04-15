@@ -2,23 +2,22 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
-using ASP.NET_Hands_on.DTO;
-using ASP.NET_Hands_on.Interface;
-using ASP.NET_Hands_on.Model;
+using ASP.NET_Hands_on.Application.DTO;
+using ASP.NET_Hands_on.Application.Interface;
+using ASP.NET_Hands_on.Domain.Model;
 using Microsoft.Extensions.Logging;
-using ASP.NET_Hands_on.DatabseContext;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
+using ASP.NET_Hands_on.Application.IRepository;
 
-namespace ASP.NET_Hands_on.Service
+namespace ASP.NET_Hands_on.Application.Service
 {
     public class ProductService : IProductService
     {
         private readonly ILogger<ProductService> _logger;
-        private readonly ASP.NET_Hands_on.Persistence.Interface.IProductRepository _productRepository;
+        private readonly IProductRepository _productRepository;
 
-        public ProductService(ILogger<ProductService> logger, ASP.NET_Hands_on.Persistence.Interface.IProductRepository productRepository)
+        public ProductService(ILogger<ProductService> logger, IProductRepository productRepository)
         {
             _logger = logger;
             _productRepository = productRepository;

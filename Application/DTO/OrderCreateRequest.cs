@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ASP.NET_Hands_on.DTO
+namespace ASP.NET_Hands_on.Application.DTO
 {
     public class OrderCreateRequest
     {

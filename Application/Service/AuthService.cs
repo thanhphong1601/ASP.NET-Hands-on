@@ -1,28 +1,27 @@
 ﻿using Application;
-using ASP.NET_Hands_on.Interface;
+using ASP.NET_Hands_on.Application.Interface;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace ASP.NET_Hands_on.Service
+namespace ASP.NET_Hands_on.Application.Service
 {
     public class AuthService : IAuthService
     {
-        private readonly ILogger<ProductService> _logger;
         private readonly JwtSettings _jwtSettings;
 
-        public AuthService(ILogger<ProductService> logger, JwtSettings jwtSettings)
+        public AuthService(IOptions<JwtSettings> jwtSettings)
         {
-            _logger = logger;
-            _jwtSettings = jwtSettings;
+            _jwtSettings = jwtSettings?.Value ?? throw new ArgumentNullException(nameof(jwtSettings));
         }
 
 
         public async Task<bool> ValidateUserAsync(string username, string password, CancellationToken cancellationToken)
         {
-            if (username == "Admin" && password == "Admin@123")
+            if (username == "admin" && password == "Admin@123")
             {
                 return true;
             }

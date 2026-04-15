@@ -1,4 +1,4 @@
-﻿using ASP.NET_Hands_on.Model;
+﻿using ASP.NET_Hands_on.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASP.NET_Hands_on.DatabseContext

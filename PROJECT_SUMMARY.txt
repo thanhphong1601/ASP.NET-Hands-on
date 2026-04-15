@@ -1,0 +1,44 @@
+Tổng quan dự án: "ASP.NET Hands-on"
+
+Mục tiêu: Một ứng dụng web (Razor Pages + Web API) minh hoạ CRUD sản phẩm, đơn hàng, khuyến mãi theo ngày (DiscountDay), kèm background email queue và JWT auth.
+
+Các project trong solution:
+- API ("ASP.NET Hands-on"): entry-point, chứa Program.cs, controllers (Products, Orders, DiscountDays, Auth), views Razor (View.cshtml), cấu hình DI, Serilog, JWT auth, SQLite seeding.
+- Domain: chứa các model/dto cốt lõi dùng chung: Product, Order, OrderProduct, DiscountDay, DiscountDayProduct, EmailJob, ApiResponse.
+- Application: business logic layer (services, DTOs, interfaces). Sau refactor, service lớp Application phụ thuộc vào các repository interface (Application.IRepository) chứ không trực tiếp dùng DbContext.
+  - Service chính: ProductService, OrderService, DiscountDayService, AuthService, EmailBackgroundService, BackgroundEmailQueue.
+  - DTO: ProductDto, ProductPatchRequest, OrderDto, OrderCreateRequest, OrderDetailDto, DiscountDayDto, DiscountDayRequestDto, UserLoginRequest.
+  - JwtSettings nằm ở `Application/JwtSettings.cs` được bind trong Program.cs (Configure<JwtSettings>). AuthService nhận IOptions<JwtSettings>.
+- Persistence: data access layer (Clean Architecture). Chứa AppDbContext (EF Core) và các repository thực thi tương tác DB:
+  - Interface: IProductRepository, IOrderRepository, IDiscountDayRepository
+  - Repository: ProductRepository, OrderRepository, DiscountDayRepository (sử dụng AppDbContext trong namespace ASP.NET_Hands_on.DatabseContext)
+  - Migrations và SeedData (SQLite) ở `Persistence/Data`.
+- Infrastructure: hỗ trợ (MailKit, Refit client, EmailService). Đồng bộ package versions (Microsoft.Extensions.*).
+
+Các tập tin/cấu hình quan trọng:
+- `ASP.NET Hands-on/Program.cs` - cấu hình DI, JWT, Serilog, OpenAPI, DB (SQLite), CORS, health checks, đăng ký services/repositories.
+- `Persistence/Data/AppDbContext.cs` - định nghĩa DbSet và cấu hình relationships (OrderProduct composite key, DiscountDayProduct composite key).
+- `Domain/Model/*.cs` - entity definitions và validator (ProductValidator sử dụng FluentValidation).
+- `Application/Service/*Service.cs` - chứa business logic; đã được chỉnh để sử dụng repository interfaces.
+- `Persistence/Repository/*Repository.cs` - nơi chứa logic truy vấn/ghi dữ liệu (paging, search, calculate total price...).
+
+Những thay đổi chính đã thực hiện (refactor):
+- Di chuyển mọi truy vấn trực tiếp từ Application services sang Persistence repository (Interface + Repository).
+- Sửa AuthService để nhận `IOptions<JwtSettings>` thay vì `JwtSettings` trực tiếp (đồng bộ với `builder.Services.Configure<JwtSettings>(...)`).
+- Đồng bộ package versions trong Infrastructure để tránh package downgrade.
+- Cập nhật Razor view reference model namespace thành `ASP.NET_Hands_on.Domain.Model.Product`.
+
+Trạng thái hiện tại:
+- Solution build: thành công (sau các chỉnh sửa). 
+- DB: SQLite file `MyAppData.db` ở root (used for development seeding).
+- DI: Program.cs đã đăng ký các repository và services; đảm bảo startup sẽ resolve IProductRepository, IOrderRepository, IDiscountDayRepository và IAuthService.
+
+Gợi ý/Next steps (nếu cần):
+- Kiểm tra registrations DI nếu bạn thay đổi namespace/interface tên khác.
+- Nếu muốn bật hot-reload hoặc môi trường khác, kiểm tra `appsettings.{Environment}.json`.
+- Chạy `dotnet run` trong project API (hoặc chạy trong Visual Studio) để khởi động.
+
+File tóm tắt này được sinh tự động từ mã nguồn trong workspace hiện tại.
+
+---
+Generated on: (workspace scan)

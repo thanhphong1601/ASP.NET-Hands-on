@@ -9,7 +9,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -27,13 +27,13 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "ASP.NET_Hands_on.DTO.DiscountDayRequestDto",
+        "Type": "ASP.NET_Hands_on.Application.DTO.DiscountDayRequestDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -62,7 +62,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -80,13 +80,13 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "ASP.NET_Hands_on.DTO.OrderCreateRequest",
+        "Type": "ASP.NET_Hands_on.Application.DTO.OrderCreateRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -110,7 +110,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -134,7 +134,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -168,7 +168,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -197,7 +197,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -215,13 +215,13 @@
     "Parameters": [
       {
         "Name": "newProduct",
-        "Type": "ASP.NET_Hands_on.Model.Product",
+        "Type": "ASP.NET_Hands_on.Domain.Model.Product",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -244,13 +244,13 @@
       },
       {
         "Name": "updateData",
-        "Type": "ASP.NET_Hands_on.Model.Product",
+        "Type": "ASP.NET_Hands_on.Domain.Model.Product",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -274,7 +274,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -308,7 +308,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -336,13 +336,13 @@
     "Parameters": [
       {
         "Name": "productList",
-        "Type": "System.Collections.Generic.List\u00601[[ASP.NET_Hands_on.Model.Product, ASP.NET Hands-on, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.List\u00601[[ASP.NET_Hands_on.Domain.Model.Product, Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -366,7 +366,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "ASP.NET_Hands_on.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "Type": "ASP.NET_Hands_on.Domain.Model.ApiResponse\u00601[[System.Object, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "application/json"
         ],
@@ -384,7 +384,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "ASP.NET_Hands_on.DTO.UserLoginRequest",
+        "Type": "ASP.NET_Hands_on.Application.DTO.UserLoginRequest",
         "IsRequired": true
       }
     ],
@@ -410,7 +410,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[ASP.NET_Hands_on.WeatherForecast, ASP.NET Hands-on, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[ASP.NET_Hands_on.WeatherForecast, API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

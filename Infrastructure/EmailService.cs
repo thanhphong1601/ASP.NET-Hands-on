@@ -1,10 +1,10 @@
-using ASP.NET_Hands_on.Interface;
+using ASP.NET_Hands_on.Application.Interface;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 
-namespace ASP.NET_Hands_on.Service
+namespace ASP.NET_Hands_on.Infrastructure
 {
     public class EmailService : IEmailService
     {

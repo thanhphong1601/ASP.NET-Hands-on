@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ASP.NET_Hands_on.DTO
+namespace ASP.NET_Hands_on.Application.DTO
 {
     public class UserLoginRequest
     {

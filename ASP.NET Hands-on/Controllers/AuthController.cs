@@ -1,5 +1,5 @@
-﻿using ASP.NET_Hands_on.DTO;
-using ASP.NET_Hands_on.Interface;
+﻿using ASP.NET_Hands_on.Application.DTO;
+using ASP.NET_Hands_on.Application.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

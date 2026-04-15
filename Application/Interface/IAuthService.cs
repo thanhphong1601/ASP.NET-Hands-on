@@ -1,4 +1,4 @@
-﻿namespace ASP.NET_Hands_on.Interface
+﻿namespace ASP.NET_Hands_on.Application.Interface
 {
     public interface IAuthService
     {

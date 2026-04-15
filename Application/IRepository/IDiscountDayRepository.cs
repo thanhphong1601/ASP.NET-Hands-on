@@ -1,10 +1,10 @@
-using ASP.NET_Hands_on.DTO;
-using ASP.NET_Hands_on.Model;
+using ASP.NET_Hands_on.Application.DTO;
+using ASP.NET_Hands_on.Domain.Model;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ASP.NET_Hands_on.Persistence.Interface
+namespace ASP.NET_Hands_on.Application.IRepository
 {
     public interface IDiscountDayRepository
     {

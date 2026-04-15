@@ -1,16 +1,18 @@
 using Application;
+using ASP.NET_Hands_on.Application.Interface;
+using ASP.NET_Hands_on.Application.IRepository;
+using ASP.NET_Hands_on.Application.Service;
 using ASP.NET_Hands_on.Data;
 using ASP.NET_Hands_on.DatabseContext;
+using ASP.NET_Hands_on.Domain.Model;
 using ASP.NET_Hands_on.Exceptions;
-using ASP.NET_Hands_on.Interface;
-using ASP.NET_Hands_on.Middlewares;
-using ASP.NET_Hands_on.Model;
-using ASP.NET_Hands_on.Service;
+using ASP.NET_Hands_on.Infrastructure;
+using ASP.NET_Hands_on.Persistence.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.Negotiate;
+
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 using Microsoft.IdentityModel.Tokens;
 using Refit;
 using Serilog;
@@ -115,8 +117,9 @@ builder.Services.AddOpenApiDocument();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
-builder.Services.AddScoped<IDiscountDayService, DiscountDayService>();
-
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IDiscountDayRepository, DiscountDayRepository>();
 // memory cache
 builder.Services.AddMemoryCache();
 
