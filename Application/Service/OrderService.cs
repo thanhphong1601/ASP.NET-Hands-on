@@ -11,33 +11,33 @@ namespace ASP.NET_Hands_on.Service
     public class OrderService : IOrderService
     {
         private readonly ILogger<OrderService> _logger;
-        private readonly AppDbContext _db;
+        private readonly ASP.NET_Hands_on.Persistence.Interface.IOrderRepository _orderRepository;
 
-        public OrderService(ILogger<OrderService> logger, AppDbContext db)
+        public OrderService(ILogger<OrderService> logger, ASP.NET_Hands_on.Persistence.Interface.IOrderRepository orderRepository)
         {
             _logger = logger;
-            _db = db;
+            _orderRepository = orderRepository;
         }
         //Need DTO productRequest (productId, quantity) to create order_product entry in the database, and also to calculate total price of the order
         public async Task<bool> AddProductToOrderAsync(int orderId, int productId, int quantity, CancellationToken cancellationToken)
         {
             _logger.LogInformation("OrderService.AddProductToOrderAsync - orderId: {OrderId}, productId: {ProductId}, qty: {Qty}", orderId, productId, quantity);
 
-            var order = await _db.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId, cancellationToken);
+            var order = await _orderRepository.GetByIdAsync(orderId, cancellationToken);
             if (order == null) throw new KeyNotFoundException($"Order with id {orderId} was not found.");
 
-            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == productId, cancellationToken);
+            var product = await _orderRepository.GetProductByIdAsync(productId, cancellationToken);
             if (product == null) throw new KeyNotFoundException($"Product with id {productId} was not found.");
 
-            var record = await _db.OrderProducts.FirstOrDefaultAsync(op => op.OrderId == orderId && op.ProductId == productId, cancellationToken);
+            var record = await _orderRepository.GetOrderProductAsync(orderId, productId, cancellationToken);
             if (record != null)
             {
                 record.Quantity += quantity;
-                _db.OrderProducts.Update(record);
+                await _orderRepository.UpdateOrderProductAsync(record, cancellationToken);
             }
             else
             {
-                await _db.OrderProducts.AddAsync(new OrderProduct
+                await _orderRepository.AddOrderProductAsync(new OrderProduct
                 {
                     OrderId = orderId,
                     ProductId = productId,
@@ -45,7 +45,7 @@ namespace ASP.NET_Hands_on.Service
                 }, cancellationToken);
             }
 
-            await _db.SaveChangesAsync(cancellationToken);
+            await _orderRepository.SaveChangesAsync(cancellationToken);
             await CalculateTotalPriceWhenAddOrRemoveProduct(orderId);
 
             _logger.LogInformation("OrderService.AddProductToOrderAsync - added product to order {OrderId}", orderId);
@@ -67,13 +67,11 @@ namespace ASP.NET_Hands_on.Service
 
             // validate product ids and create order
             var newOrder = new Order();
-            await _db.Orders.AddAsync(newOrder, cancellationToken);
-            await _db.SaveChangesAsync(cancellationToken);
+            await _orderRepository.AddOrderAsync(newOrder, cancellationToken);
+            await _orderRepository.SaveChangesAsync(cancellationToken);
 
             var validProductIds = productQuantities.Keys.ToList();
-            var validProducts = await _db.Products
-                .Where(p => validProductIds.Contains(p.Id))
-                .ToDictionaryAsync(p => p.Id, p => p, cancellationToken);
+            var validProducts = await _orderRepository.GetProductsByIdsAsync(validProductIds, cancellationToken);
 
             // create order-product records
             foreach (var kv in productQuantities)
@@ -84,7 +82,7 @@ namespace ASP.NET_Hands_on.Service
                 if (!validProducts.ContainsKey(productId))
                     continue; // ignore invalid product ids
 
-                await _db.OrderProducts.AddAsync(new OrderProduct
+                await _orderRepository.AddOrderProductAsync(new OrderProduct
                 {
                     OrderId = newOrder.OrderId,
                     ProductId = productId,
@@ -92,7 +90,7 @@ namespace ASP.NET_Hands_on.Service
                 }, cancellationToken);
             }
 
-            await _db.SaveChangesAsync(cancellationToken);
+            await _orderRepository.SaveChangesAsync(cancellationToken);
             await CalculateTotalPriceWhenAddOrRemoveProduct(newOrder.OrderId);
 
             var createdOrder = new OrderDetailDto(newOrder.OrderId, 
@@ -108,11 +106,7 @@ namespace ASP.NET_Hands_on.Service
         {
             _logger.LogInformation("OrderService.GetOrderByIdAsync - orderId: {OrderId}", orderId);
 
-            var order = await _db.Orders
-                .AsNoTracking()
-                .Include(o => o.OrderProducts)
-                .ThenInclude(op => op.Product)
-                .FirstOrDefaultAsync(o => o.OrderId == orderId, cancellationToken);
+            var order = await _orderRepository.GetByIdWithIncludesAsync(orderId, cancellationToken);
 
             if (order == null) throw new KeyNotFoundException($"Order with id {orderId} was not found.");
 
@@ -132,30 +126,20 @@ namespace ASP.NET_Hands_on.Service
             if (pageNumber <= 0) pageNumber = 1;
             if (pageSize <= 0) pageSize = 30;
 
-            var totalCount = await _db.Orders.AsNoTracking().CountAsync(cancellationToken);
-
-            var items = await _db.Orders
-                .AsNoTracking()
-                .OrderBy(o => o.OrderId)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync(cancellationToken);
+            var totalCount = await _orderRepository.CountOrdersAsync(cancellationToken);
+            var items = await _orderRepository.GetOrdersPagedAsync(pageNumber, pageSize, cancellationToken);
 
             return (items, totalCount);
         }
 
         public async Task CalculateTotalPriceWhenAddOrRemoveProduct(int orderId)
         {
-            decimal totalPrice = await _db.OrderProducts
-                .Where(op => op.OrderId == orderId)
-                .Join(_db.Products, op => op.ProductId, p => p.Id, (op, p) => op.Quantity * p.Price)
-                .SumAsync();
-
-            var order = await _db.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
+            var totalPrice = await _orderRepository.CalculateTotalPriceAsync(orderId, CancellationToken.None);
+            var order = await _orderRepository.GetByIdAsync(orderId, CancellationToken.None);
             if (order != null)
             {
                 order.TotalPrice = totalPrice;
-                await _db.SaveChangesAsync();
+                await _orderRepository.SaveChangesAsync(CancellationToken.None);
             }
         }
 
@@ -163,21 +147,16 @@ namespace ASP.NET_Hands_on.Service
         {
             _logger.LogInformation("OrderService.DeleteOrderAsync - deleting order {OrderId}", orderId);
 
-            var order = await _db.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId, cancellationToken);
+            var order = await _orderRepository.GetByIdAsync(orderId, cancellationToken);
             if (order == null)
             {
                 _logger.LogWarning("OrderService.DeleteOrderAsync - order {OrderId} not found", orderId);
                 return false;
             }
 
-            // remove related order-product entries
-            var related = _db.OrderProducts.Where(op => op.OrderId == orderId);
-            _db.OrderProducts.RemoveRange(related);
-
-            // remove order
-            _db.Orders.Remove(order);
-
-            await _db.SaveChangesAsync(cancellationToken);
+            await _orderRepository.RemoveOrderProductsByOrderIdAsync(orderId, cancellationToken);
+            await _orderRepository.DeleteOrderAsync(order, cancellationToken);
+            await _orderRepository.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation("OrderService.DeleteOrderAsync - deleted order {OrderId}", orderId);
             return true;

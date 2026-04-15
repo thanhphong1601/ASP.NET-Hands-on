@@ -1,4 +1,5 @@
-﻿using ASP.NET_Hands_on.Interface;
+﻿using Application;
+using ASP.NET_Hands_on.Interface;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,10 +11,12 @@ namespace ASP.NET_Hands_on.Service
     public class AuthService : IAuthService
     {
         private readonly ILogger<ProductService> _logger;
+        private readonly JwtSettings _jwtSettings;
 
-        public AuthService(ILogger<ProductService> logger)
+        public AuthService(ILogger<ProductService> logger, JwtSettings jwtSettings)
         {
             _logger = logger;
+            _jwtSettings = jwtSettings;
         }
 
 
@@ -41,13 +44,13 @@ namespace ASP.NET_Hands_on.Service
                new Claim("tenant", "vn")
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey!));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(10),
                 signingCredentials: creds

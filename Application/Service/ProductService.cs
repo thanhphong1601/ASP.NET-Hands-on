@@ -16,12 +16,12 @@ namespace ASP.NET_Hands_on.Service
     public class ProductService : IProductService
     {
         private readonly ILogger<ProductService> _logger;
-        private readonly AppDbContext _db;
+        private readonly ASP.NET_Hands_on.Persistence.Interface.IProductRepository _productRepository;
 
-        public ProductService(ILogger<ProductService> logger, AppDbContext db)
+        public ProductService(ILogger<ProductService> logger, ASP.NET_Hands_on.Persistence.Interface.IProductRepository productRepository)
         {
             _logger = logger;
-            _db = db;
+            _productRepository = productRepository;
         }
 
         public async Task<(List<ProductDto> Items, int TotalCount)> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
@@ -31,15 +31,8 @@ namespace ASP.NET_Hands_on.Service
             if (pageNumber <= 0) pageNumber = 1;
             if (pageSize <= 0) pageSize = 30;
 
-            var totalCount = await _db.Products.AsNoTracking().CountAsync(cancellationToken);
-
-            var items = await _db.Products
-                .AsNoTracking()
-                .OrderBy(p => p.Id)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(p => new ProductDto(p.ProductId, p.Name, p.Price))
-                .ToListAsync(cancellationToken);
+            var totalCount = await _productRepository.CountAsync(cancellationToken);
+            var items = await _productRepository.GetPagedProductDtosAsync(pageNumber, pageSize, cancellationToken);
             //                .Select(p => new ProductDto(p.ProductId, p.Name, p.Price))
 
             return (items, totalCount);
@@ -50,19 +43,14 @@ namespace ASP.NET_Hands_on.Service
             _logger.LogInformation("ProductService.SearchByNameOrProductIdAsync - keyword: {Keyword}", keyword);
             if (string.IsNullOrWhiteSpace(keyword)) return new List<ProductDto>();
 
-            var q = keyword.Trim();
-            return await _db.Products
-                .AsNoTracking()
-                .Where(p => EF.Functions.Like(p.Name, $"%{q}%") || EF.Functions.Like(p.ProductId, $"%{q}%"))
-                .Select(p => new ProductDto(p.ProductId, p.Name, p.Price))
-                .ToListAsync(cancellationToken);
+            return await _productRepository.SearchByNameOrProductIdAsync(keyword, cancellationToken);
         }
 
         public async Task<Product> CreateAsync(Product newProduct, CancellationToken cancellationToken)
         {
             _logger.LogInformation("ProductService.CreateAsync - creating product {ProductId} {Name}", newProduct.ProductId, newProduct.Name);
-            await _db.Products.AddAsync(newProduct, cancellationToken);
-            await _db.SaveChangesAsync(cancellationToken);
+            await _productRepository.AddAsync(newProduct, cancellationToken);
+            await _productRepository.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("ProductService.CreateAsync - created id {Id}", newProduct.Id);
             return newProduct;
         }
@@ -70,8 +58,8 @@ namespace ASP.NET_Hands_on.Service
         public async Task<List<Product>> CreateManyAsync(List<Product> productList, CancellationToken cancellationToken)
         {
             _logger.LogInformation("ProductService.CreateManyAsync - creating {Count} products", productList?.Count ?? 0);
-            await _db.Products.AddRangeAsync(productList, cancellationToken);
-            await _db.SaveChangesAsync(cancellationToken);
+            await _productRepository.AddRangeAsync(productList, cancellationToken);
+            await _productRepository.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("ProductService.CreateManyAsync - created {Count} products", productList.Count);
             return productList;
         }
@@ -79,14 +67,14 @@ namespace ASP.NET_Hands_on.Service
         public async Task<Product> UpdateAsync(int id, Product updateData, CancellationToken cancellationToken)
         {
             _logger.LogInformation("ProductService.UpdateAsync - updating id {Id}", id);
-            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            var product = await _productRepository.GetByIdAsync(id, cancellationToken);
             if (product == null) throw new KeyNotFoundException("Product not found");
 
             product.Name = updateData.Name;
             product.ProductId = updateData.ProductId;
             product.Price = updateData.Price;
 
-            await _db.SaveChangesAsync(cancellationToken);
+            await _productRepository.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("ProductService.UpdateAsync - updated id {Id}", id);
             return product;
         }
@@ -94,18 +82,18 @@ namespace ASP.NET_Hands_on.Service
         public async Task DeleteAsync(int id, CancellationToken cancellationToken)
         {
             _logger.LogInformation("ProductService.DeleteAsync - deleting id {Id}", id);
-            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            var product = await _productRepository.GetByIdAsync(id, cancellationToken);
             if (product == null) throw new KeyNotFoundException("Product not found");
 
-            _db.Products.Remove(product);
-            await _db.SaveChangesAsync(cancellationToken);
+            await _productRepository.RemoveAsync(product, cancellationToken);
+            await _productRepository.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("ProductService.DeleteAsync - deleted id {Id}", id);
         }
 
         public async Task<Product> PatchAsync(int id, ProductPatchRequest patchRequest, CancellationToken cancellationToken)
         {
             _logger.LogInformation("ProductService.PatchAsync - patching id {Id} field {Field}", id, patchRequest?.FieldName);
-            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            var product = await _productRepository.GetByIdAsync(id, cancellationToken);
             if (product == null) throw new KeyNotFoundException("Product not found");
 
             if (patchRequest == null) throw new ArgumentNullException(nameof(patchRequest));
@@ -135,7 +123,7 @@ namespace ASP.NET_Hands_on.Service
                     throw new ArgumentException("Unsupported field.");
             }
 
-            await _db.SaveChangesAsync(cancellationToken);
+            await _productRepository.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("ProductService.PatchAsync - patched id {Id} field {Field}", id, field);
             return product;
         }
