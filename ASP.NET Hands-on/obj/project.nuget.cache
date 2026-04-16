@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "6y3hMMszYOk=",
+  "dgSpecHash": "k8rPeUixesw=",
   "success": true,
   "projectFilePath": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\API.csproj",
   "expectedPackageFiles": [
@@ -90,6 +90,7 @@
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite.core\\10.0.5\\microsoft.entityframeworkcore.sqlite.core.10.0.5.nupkg.sha512",
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\microsoft.extensions.apidescription.server\\10.0.0\\microsoft.extensions.apidescription.server.10.0.0.nupkg.sha512",
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\microsoft.extensions.dependencymodel\\10.0.5\\microsoft.extensions.dependencymodel.10.0.5.nupkg.sha512",
+    "C:\\Users\\phong.nguyen2\\.nuget\\packages\\microsoft.extensions.http.polly\\10.0.6\\microsoft.extensions.http.polly.10.0.6.nupkg.sha512",
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.14.0\\microsoft.identitymodel.abstractions.8.14.0.nupkg.sha512",
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\8.14.0\\microsoft.identitymodel.jsonwebtokens.8.14.0.nupkg.sha512",
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\microsoft.identitymodel.logging\\8.14.0\\microsoft.identitymodel.logging.8.14.0.nupkg.sha512",
@@ -130,6 +131,8 @@
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\nuget.projectmodel\\6.12.1\\nuget.projectmodel.6.12.1.nupkg.sha512",
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\nuget.protocol\\6.12.1\\nuget.protocol.6.12.1.nupkg.sha512",
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\nuget.versioning\\6.12.1\\nuget.versioning.6.12.1.nupkg.sha512",
+    "C:\\Users\\phong.nguyen2\\.nuget\\packages\\polly\\7.2.4\\polly.7.2.4.nupkg.sha512",
+    "C:\\Users\\phong.nguyen2\\.nuget\\packages\\polly.extensions.http\\3.0.0\\polly.extensions.http.3.0.0.nupkg.sha512",
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\refit\\10.1.6\\refit.10.1.6.nupkg.sha512",
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\refit.httpclientfactory\\10.1.6\\refit.httpclientfactory.10.1.6.nupkg.sha512",
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\riok.mapperly\\4.3.1\\riok.mapperly.4.3.1.nupkg.sha512",
@@ -166,5 +169,30 @@
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.6\\system.security.cryptography.protecteddata.9.0.6.nupkg.sha512",
     "C:\\Users\\phong.nguyen2\\.nuget\\packages\\yamldotnet\\16.3.0\\yamldotnet.16.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1901",
+      "level": "Warning",
+      "message": "Package 'NuGet.Packaging' 6.12.1 has a known low severity vulnerability, https://github.com/advisories/GHSA-g4vj-cjjj-v7hg",
+      "projectPath": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\API.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\API.csproj",
+      "libraryId": "NuGet.Packaging",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1901",
+      "level": "Warning",
+      "message": "Package 'NuGet.Protocol' 6.12.1 has a known low severity vulnerability, https://github.com/advisories/GHSA-g4vj-cjjj-v7hg",
+      "projectPath": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\API.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\API.csproj",
+      "libraryId": "NuGet.Protocol",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
 }

@@ -7,5 +7,8 @@ namespace ASP.NET_Hands_on.Application.Interface
     {
         [Get("/products")]
         Task<ProductResponse> GetProducts();
+
+        [Get("/api/mock")]
+        Task<int> Test();
     }
 }

@@ -3,32 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{44C737FA-098C-4869-AB7C-68EB37FF479C}|Domain\\Domain.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\domain\\model\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{44C737FA-098C-4869-AB7C-68EB37FF479C}|Domain\\Domain.csproj|solutionrelative:domain\\model\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\application\\interface\\iproductsfetchingapibyurl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|solutionrelative:application\\interface\\iproductsfetchingapibyurl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\application\\service\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|solutionrelative:application\\service\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\asp.net hands-on\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|solutionrelative:asp.net hands-on\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\asp.net hands-on\\controllers\\mockcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|solutionrelative:asp.net hands-on\\controllers\\mockcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\asp.net hands-on\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|solutionrelative:asp.net hands-on\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\application\\service\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|solutionrelative:application\\service\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\asp.net hands-on\\controllers\\view.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|solutionrelative:asp.net hands-on\\controllers\\view.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B7CAB038-D72F-4C51-B466-854C89D605EC}|Persistence\\Persistence.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\persistence\\data\\seeddata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B7CAB038-D72F-4C51-B466-854C89D605EC}|Persistence\\Persistence.csproj|solutionrelative:persistence\\data\\seeddata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EF3B2FF3-FD38-4142-BF20-3A82924C58F1}|Infrastructure\\Infrastructure.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\infrastructure\\infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{EF3B2FF3-FD38-4142-BF20-3A82924C58F1}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\asp.net hands-on\\controllers\\discountdayscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|solutionrelative:asp.net hands-on\\controllers\\discountdayscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -43,87 +35,67 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ApiResponse.cs",
-              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Domain\\Model\\ApiResponse.cs",
-              "RelativeDocumentMoniker": "Domain\\Model\\ApiResponse.cs",
-              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Domain\\Model\\ApiResponse.cs",
-              "RelativeToolTip": "Domain\\Model\\ApiResponse.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Title": "IProductsFetchingApiByUrl.cs",
+              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Interface\\IProductsFetchingApiByUrl.cs",
+              "RelativeDocumentMoniker": "Application\\Interface\\IProductsFetchingApiByUrl.cs",
+              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Interface\\IProductsFetchingApiByUrl.cs*",
+              "RelativeToolTip": "Application\\Interface\\IProductsFetchingApiByUrl.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T03:42:59.086Z",
+              "WhenOpened": "2026-04-16T04:08:25.655Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MockController.cs",
+              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\MockController.cs",
+              "RelativeDocumentMoniker": "ASP.NET Hands-on\\Controllers\\MockController.cs",
+              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\MockController.cs",
+              "RelativeToolTip": "ASP.NET Hands-on\\Controllers\\MockController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-16T04:01:58.298Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Service\\AuthService.cs",
-              "RelativeDocumentMoniker": "Application\\Service\\AuthService.cs",
-              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Service\\AuthService.cs",
-              "RelativeToolTip": "Application\\Service\\AuthService.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABcAAAAeAAAAAAAAAA==",
+              "Title": "ProductsController.cs",
+              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\ProductsController.cs",
+              "RelativeDocumentMoniker": "ASP.NET Hands-on\\Controllers\\ProductsController.cs",
+              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\ProductsController.cs",
+              "RelativeToolTip": "ASP.NET Hands-on\\Controllers\\ProductsController.cs",
+              "ViewState": "AgIAAHcAAAAAAAAAAAAswLgAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T03:36:10.442Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ProductService.cs",
-              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Service\\ProductService.cs",
-              "RelativeDocumentMoniker": "Application\\Service\\ProductService.cs",
-              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Service\\ProductService.cs",
-              "RelativeToolTip": "Application\\Service\\ProductService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T03:29:40.114Z"
+              "WhenOpened": "2026-04-16T03:39:14.66Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "View.cshtml",
-              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\View.cshtml",
-              "RelativeDocumentMoniker": "ASP.NET Hands-on\\Controllers\\View.cshtml",
-              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\View.cshtml",
-              "RelativeToolTip": "ASP.NET Hands-on\\Controllers\\View.cshtml",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAAAwAAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-04-15T03:29:20.689Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Infrastructure.csproj",
-              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Infrastructure\\Infrastructure.csproj",
-              "RelativeDocumentMoniker": "Infrastructure\\Infrastructure.csproj",
-              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Infrastructure\\Infrastructure.csproj",
-              "RelativeToolTip": "Infrastructure\\Infrastructure.csproj",
-              "ViewState": "AgIAABIAAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-15T03:28:27.06Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "SeedData.cs",
-              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Persistence\\Data\\SeedData.cs",
-              "RelativeDocumentMoniker": "Persistence\\Data\\SeedData.cs",
-              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Persistence\\Data\\SeedData.cs",
-              "RelativeToolTip": "Persistence\\Data\\SeedData.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAIBJwAIAAAAAAAAAAAAAAA==",
+              "Title": "DiscountDaysController.cs",
+              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\DiscountDaysController.cs",
+              "RelativeDocumentMoniker": "ASP.NET Hands-on\\Controllers\\DiscountDaysController.cs",
+              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\DiscountDaysController.cs",
+              "RelativeToolTip": "ASP.NET Hands-on\\Controllers\\DiscountDaysController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T03:28:24.242Z"
+              "WhenOpened": "2026-04-16T03:31:30.942Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Program.cs",
               "RelativeDocumentMoniker": "ASP.NET Hands-on\\Program.cs",
               "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Program.cs",
               "RelativeToolTip": "ASP.NET Hands-on\\Program.cs",
-              "ViewState": "AgIAAKgAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAKkAAAAAAAAAAIAwwL4AAABTAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T03:25:25.739Z"
+              "WhenOpened": "2026-04-16T03:25:55.002Z",
+              "EditorCaption": ""
             }
           ]
         }

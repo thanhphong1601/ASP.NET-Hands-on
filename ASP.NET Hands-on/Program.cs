@@ -1,4 +1,5 @@
 using Application;
+using ASP.NET_Hands_on.Application.CQRS.Products;
 using ASP.NET_Hands_on.Application.Interface;
 using ASP.NET_Hands_on.Application.IRepository;
 using ASP.NET_Hands_on.Application.Service;
@@ -9,11 +10,11 @@ using ASP.NET_Hands_on.Exceptions;
 using ASP.NET_Hands_on.Infrastructure;
 using ASP.NET_Hands_on.Persistence.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
-
 using Microsoft.IdentityModel.Tokens;
+using Polly;
+using Polly.Extensions.Http;
 using Refit;
 using Serilog;
 using System.Text;
@@ -113,6 +114,9 @@ builder.Services.AddControllers()
 builder.Services.AddOpenApi();
 builder.Services.AddOpenApiDocument();
 
+// Register MediatR handlers
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetAllProductsQuery).Assembly));
+
 // Register product and order services
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
@@ -163,9 +167,28 @@ builder.Services.AddSqlite<AppDbContext>(connectionString,
     }));
 
 // Add Refit
+//Polly retry config
+var retryPolicy = HttpPolicyExtensions
+    .HandleTransientHttpError() // Tự động bắt lỗi 5xx, 408 Timeout, rớt mạng
+    .WaitAndRetryAsync(3, retryAttempt =>
+        TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+        onRetry: (outcome, timespan, retryAttempt, context) =>
+        {
+            // Log ra để biết nó đang thử lại (có thể dùng Serilog ở đây)
+            Console.WriteLine($"Đang thử lại lần thứ {retryAttempt} sau {timespan.TotalSeconds} giây...");
+        });
+
+var mockBase = builder.Configuration.GetValue<string>("MockApi:BaseUrl") ?? "http://localhost:5225";
 builder.Services
     .AddRefitClient<IProductsFetchingApiByUrl>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://dummyjson.com/"));
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri(mockBase))
+    .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+    {
+        // allow multiple concurrent connections to the same server (useful when calling local endpoints)
+        MaxConnectionsPerServer = 10
+    })
+    .AddPolicyHandler(retryPolicy);
+    //.ConfigureHttpClient(c => c.BaseAddress = new Uri("https://dummyjson.com/"));
 
 // Enable Serilog integration with the generic host
 builder.Host.UseSerilog();

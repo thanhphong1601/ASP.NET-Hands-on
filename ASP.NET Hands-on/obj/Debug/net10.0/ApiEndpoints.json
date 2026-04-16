@@ -42,6 +42,16 @@
     ]
   },
   {
+    "ContainingType": "ASP.NET_Hands_on.Controllers.MockController",
+    "Method": "Test",
+    "RelativePath": "api/Mock",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ASP.NET_Hands_on.Controllers.OrdersController",
     "Method": "GetAll",
     "RelativePath": "api/Orders",
@@ -349,6 +359,16 @@
         "StatusCode": 201
       }
     ]
+  },
+  {
+    "ContainingType": "ASP.NET_Hands_on.Controllers.ProductsController",
+    "Method": "TestMockViaRefit",
+    "RelativePath": "api/Products/mocktest-refit",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "ASP.NET_Hands_on.Controllers.ProductsController",

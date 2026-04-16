@@ -1,6 +1,8 @@
 ﻿using ASP.NET_Hands_on.Application.DTO;
 using ASP.NET_Hands_on.Application.Interface;
+using ASP.NET_Hands_on.Application.CQRS.Products;
 using ASP.NET_Hands_on.Domain.Model;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,16 +12,16 @@ namespace ASP.NET_Hands_on.Controllers
     [Route("api/[controller]")] // api/product
     public class ProductsController : ControllerBase
     {
-        private readonly IProductService _productService;
         private readonly ILogger<ProductsController> _logger;
+        private readonly IMediator _mediator;
         private readonly ProductValidator validator = new ProductValidator();
         private readonly IProductsFetchingApiByUrl _productsFetchingApiByUrl;
         private readonly IConfiguration _configuration;
 
-        public ProductsController(IProductService productService, ILogger<ProductsController> logger, IProductsFetchingApiByUrl productsFetchingApiByUrl, IConfiguration configuration)
+        public ProductsController(ILogger<ProductsController> logger, IProductsFetchingApiByUrl productsFetchingApiByUrl, IConfiguration configuration, IMediator mediator)
         {
-            _productService = productService;
             _logger = logger;
+            _mediator = mediator;
             _productsFetchingApiByUrl = productsFetchingApiByUrl;
             _configuration = configuration;
         }
@@ -42,7 +44,7 @@ namespace ASP.NET_Hands_on.Controllers
             var page = pageNumber.HasValue && pageNumber.Value > 0 ? pageNumber.Value : defaultPageNumber;
             var size = numberOrProduct.HasValue && numberOrProduct.Value > 0 ? numberOrProduct.Value : defaultPageSize;
 
-            var (items, totalCount) = await _productService.GetAllAsync(page, size, cancellationToken);
+            var (items, totalCount) = await _mediator.Send(new GetAllProductsQuery(page, size), cancellationToken);
 
             var totalPages = (int)Math.Ceiling(totalCount / (double)size);
 
@@ -65,7 +67,7 @@ namespace ASP.NET_Hands_on.Controllers
         public async Task<ActionResult<ApiResponse<object>>> GetByProductName([FromQuery] string keyword, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to ProductsController.GetByProductName - keyword: {Keyword}", keyword);
-            var productsFound = await _productService.SearchByNameOrProductIdAsync(keyword, cancellationToken);
+            var productsFound = await _mediator.Send(new SearchProductsQuery(keyword), cancellationToken);
             var apiResp = new ApiResponse<object>(productsFound, 200, "Request successful");
             return Ok(apiResp);
         }
@@ -84,7 +86,7 @@ namespace ASP.NET_Hands_on.Controllers
             }
 
             _logger.LogInformation("Run to ProductsController.Create - creating product {ProductId}", newProduct.ProductId);
-            var created = await _productService.CreateAsync(newProduct, cancellationToken);
+            var created = await _mediator.Send(new CreateProductCommand(newProduct), cancellationToken);
             var apiResp = new ApiResponse<object>(created, 201, "Created");
             return CreatedAtAction(nameof(GetAll), new { id = created.Id }, apiResp);
         }
@@ -101,7 +103,7 @@ namespace ASP.NET_Hands_on.Controllers
                 return BadRequest("Product list cannot be empty.");
             }
 
-            var created = await _productService.CreateManyAsync(productList, cancellationToken);
+            var created = await _mediator.Send(new CreateManyProductsCommand(productList), cancellationToken);
             var apiResp = new ApiResponse<object>(created, 201, "Created");
             return CreatedAtAction(nameof(GetAll), null, apiResp);
         }
@@ -121,7 +123,7 @@ namespace ASP.NET_Hands_on.Controllers
             }
 
             _logger.LogInformation("Run to ProductsController.Update - id: {Id}", id);
-            var updated = await _productService.UpdateAsync(id, updateData, cancellationToken);
+            var updated = await _mediator.Send(new UpdateProductCommand(id, updateData), cancellationToken);
             var apiResp = new ApiResponse<object>(updated, 200, "Updated");
             return Ok(apiResp);
             
@@ -139,7 +141,7 @@ namespace ASP.NET_Hands_on.Controllers
             {
                 return BadRequest(validationResult.Errors);
             }
-            var patched = await _productService.PatchAsync(id, patchRequest, cancellationToken);
+            var patched = await _mediator.Send(new PatchProductCommand(id, patchRequest), cancellationToken);
             var apiResp = new ApiResponse<object>(patched, 200, "Patched");
             return Ok(apiResp);
         }
@@ -151,7 +153,7 @@ namespace ASP.NET_Hands_on.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<object>>> Delete(int id, CancellationToken cancellationToken)
         {
-            await _productService.DeleteAsync(id, cancellationToken);
+            await _mediator.Send(new DeleteProductCommand(id), cancellationToken);
             var apiResp = new ApiResponse<object>(null, 200, "Deleted");
             return Ok(apiResp);
         }
@@ -176,6 +178,16 @@ namespace ASP.NET_Hands_on.Controllers
 
             var apiErr = new ApiResponse<object>(null, 400, "Failed to fetch data from other API");
             return BadRequest(apiErr);
+        }
+
+        // GET: api/products/mocktest-refit
+        // This endpoint calls the local MockController via the Refit client so the Polly retry policy is used.
+        [HttpGet("mocktest-refit")]
+        public async Task<IActionResult> TestMockViaRefit(CancellationToken cancellationToken)
+        {
+            // This will call http://localhost:5225/api/mock through the Refit client configured in Program.cs
+            var result = await _productsFetchingApiByUrl.Test();
+            return Ok(result);
         }
     }
 }
