@@ -209,11 +209,15 @@ namespace ASP.NET_Hands_on.Application.CQRS.Products
         public async Task<Unit> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("DeleteProductCommandHandler - deleting id {Id}", request.Id);
+
             var product = await _repo.GetByIdAsync(request.Id, cancellationToken);
             if (product == null) throw new KeyNotFoundException("Product not found");
 
-            await _repo.RemoveAsync(product, cancellationToken);
+            _logger.LogInformation("Set delete field of product with Id {Id} to True", request.Id);
+
+            product.isDeleted = true;
             await _repo.SaveChangesAsync(cancellationToken);
+
             _logger.LogInformation("DeleteProductCommandHandler - deleted id {Id}", request.Id);
             return Unit.Value;
         }

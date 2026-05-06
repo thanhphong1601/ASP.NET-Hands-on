@@ -38,7 +38,7 @@ namespace ASP.NET_Hands_on.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         //[ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<PagedResult<ProductDto>>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponse<PagedResult<ProductDto>>>> GetAllProducts([FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to ProductsController.GetAll");
             // read defaults from configuration
@@ -102,12 +102,12 @@ namespace ASP.NET_Hands_on.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse<Product>>> Create([FromBody] Product newProduct, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponse<Product>>> CreateProduct([FromBody] Product newProduct, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to ProductsController.Create - creating product {ProductId}", newProduct.ProductId);
             var created = await _mediator.Send(new CreateProductCommand(newProduct), cancellationToken);
             var apiResp = new ApiResponse<Product>(created, 201, "Created");
-            return CreatedAtAction(nameof(GetAll), new { id = created.Id }, apiResp);
+            return CreatedAtAction(nameof(CreateProduct), new { id = created.Id }, apiResp);
         }
 
         //POST: api/products/many
@@ -117,7 +117,7 @@ namespace ASP.NET_Hands_on.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse<List<Product>>>> CreateMany([FromBody] List<Product> productList, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponse<List<Product>>>> CreateManyProducts([FromBody] List<Product> productList, CancellationToken cancellationToken)
         {
             if (productList == null || productList.Count == 0)
             {
@@ -126,7 +126,7 @@ namespace ASP.NET_Hands_on.Controllers
 
             var created = await _mediator.Send(new CreateManyProductsCommand(productList), cancellationToken);
             var apiResp = new ApiResponse<List<Product>>(created, 201, "Created");
-            return CreatedAtAction(nameof(GetAll), null, apiResp);
+            return CreatedAtAction(nameof(CreateManyProducts), null, apiResp);
         }
 
         //PUT: api/products/5
@@ -136,7 +136,7 @@ namespace ASP.NET_Hands_on.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse<Product>>> Update(int id, [FromBody] Product updateData, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponse<Product>>> UpdateProduct(int id, [FromBody] Product updateData, CancellationToken cancellationToken)
         {
 
             _logger.LogInformation("Run to ProductsController.Update - id: {Id}", id);
@@ -153,7 +153,7 @@ namespace ASP.NET_Hands_on.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ApiResponse<Product>>> Patch(int id, [FromQuery] ProductPatchRequest patchRequest, CancellationToken cancellationToken)
+        public async Task<ActionResult<ApiResponse<Product>>> PatchProduct(int id, [FromQuery] ProductPatchRequest patchRequest, CancellationToken cancellationToken)
         {
             var validationResult = new ProductPatchRequestValidator().Validate(patchRequest);
             if (!validationResult.IsValid)
@@ -171,7 +171,7 @@ namespace ASP.NET_Hands_on.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteProduct(int id, CancellationToken cancellationToken)
         {
             await _mediator.Send(new DeleteProductCommand(id), cancellationToken);
            

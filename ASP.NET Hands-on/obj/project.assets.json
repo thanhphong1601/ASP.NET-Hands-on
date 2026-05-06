@@ -1803,7 +1803,7 @@
           }
         }
       },
-      "Microsoft.OpenApi/2.4.1": {
+      "Microsoft.OpenApi/3.5.3": {
         "type": "package",
         "compile": {
           "lib/net8.0/Microsoft.OpenApi.dll": {
@@ -6227,10 +6227,10 @@
         "ref/netstandard2.0/Microsoft.NET.StringTools.xml"
       ]
     },
-    "Microsoft.OpenApi/2.4.1": {
-      "sha512": "u7QhXCISMQuab3flasb1hoaiERmUqyWsW7tmQODyILoQ7mJV5IRGM+2KKZYo0QUfC13evEOcHAb6TPWgqEQtrw==",
+    "Microsoft.OpenApi/3.5.3": {
+      "sha512": "V/PpjnjbnKsLTy0Bp3euE3l9vAJff/ZgaaOclKLZh6aGkmkWix008MidGVORHlbYfpu7pRMdvo5bGwbiDMFyxg==",
       "type": "package",
-      "path": "microsoft.openapi/2.4.1",
+      "path": "microsoft.openapi/3.5.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -6241,7 +6241,7 @@
         "lib/netstandard2.0/Microsoft.OpenApi.dll",
         "lib/netstandard2.0/Microsoft.OpenApi.pdb",
         "lib/netstandard2.0/Microsoft.OpenApi.xml",
-        "microsoft.openapi.2.4.1.nupkg.sha512",
+        "microsoft.openapi.3.5.3.nupkg.sha512",
         "microsoft.openapi.nuspec"
       ]
     },
@@ -8165,6 +8165,7 @@
       "Microsoft.AspNetCore.OpenApi >= 10.0.5",
       "Microsoft.EntityFrameworkCore.Design >= 10.0.5",
       "Microsoft.Extensions.Http.Polly >= 10.0.6",
+      "Microsoft.OpenApi >= 3.5.3",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 10.0.2",
       "NSwag.AspNetCore >= 14.7.0",
       "Persistence >= 1.0.0",
@@ -8265,6 +8266,10 @@
           "Microsoft.Extensions.Http.Polly": {
             "target": "Package",
             "version": "[10.0.6, )"
+          },
+          "Microsoft.OpenApi": {
+            "target": "Package",
+            "version": "[3.5.3, )"
           },
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "target": "Package",

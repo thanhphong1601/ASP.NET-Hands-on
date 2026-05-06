@@ -10,7 +10,11 @@ namespace ASP.NET_Hands_on.Domain.Model
         public string? ProductId { get; set; }
         [Required]
         public string? Name { get; set; }
-        public decimal Price { get; set; } = decimal.Zero;
+        public decimal Price { get; set {
+                if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
+                field = value;
+            } } = decimal.Zero;
+        public Boolean isDeleted { get; set; } = false;
 
         public List<OrderProduct> OrderProducts { get; set; } = new();
         public List<DiscountDayProduct> DiscountDayProducts { get; set; } = new();
