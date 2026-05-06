@@ -8,6 +8,7 @@ namespace ASP.NET_Hands_on.Application.DTO
         int OrderId,
         DateTime OrderDate,
         decimal TotalPrice,
-        List<ProductDto> Products
+        List<ProductDto> Products,
+        string? CustomerName
     );
 }

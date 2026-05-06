@@ -6,6 +6,7 @@ namespace ASP.NET_Hands_on.Application.DTO
     // DTO returned by product APIs: only expose necessary fields
     public record ProductDto
     (
+        int id,
         string ProductId,
         string Name,
         decimal Price

@@ -37,7 +37,7 @@ namespace ASP.NET_Hands_on.Application.Service
                 dd.CreatedDate.Date,
                 dd.FromDate,
                 dd.ToDate,
-                dd.DiscountDayProducts.Select(dpd => new ProductDto(dpd.Product.ProductId ?? string.Empty, dpd.Product.Name ?? string.Empty, dpd.Product.Price)).ToList()
+                dd.DiscountDayProducts.Select(dpd => new ProductDto(dpd.Product.Id, dpd.Product.ProductId ?? string.Empty, dpd.Product.Name ?? string.Empty, dpd.Product.Price)).ToList()
             )).ToList();
 
             // cache for 60 seconds
@@ -75,7 +75,7 @@ namespace ASP.NET_Hands_on.Application.Service
             // invalidate cache
             _cache.Remove(CACHE_KEY);
 
-            var displayedProducts = products.Select(p => new ProductDto(p.ProductId ?? string.Empty, p.Name ?? string.Empty, p.Price)).ToList();
+            var displayedProducts = products.Select(p => new ProductDto(p.Id, p.ProductId ?? string.Empty, p.Name ?? string.Empty, p.Price)).ToList();
             // return created dto
             var created = new DiscountDayDto(entity.Id, entity.DayName, entity.CreatedDate, entity.FromDate, entity.ToDate, displayedProducts);
             return created;

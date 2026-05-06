@@ -3,24 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\application\\interface\\iproductsfetchingapibyurl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|solutionrelative:application\\interface\\iproductsfetchingapibyurl.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\asp.net hands-on\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|solutionrelative:asp.net hands-on\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\asp.net hands-on\\controllers\\mockcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|solutionrelative:asp.net hands-on\\controllers\\mockcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{44C737FA-098C-4869-AB7C-68EB37FF479C}|Domain\\Domain.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\domain\\model\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{44C737FA-098C-4869-AB7C-68EB37FF479C}|Domain\\Domain.csproj|solutionrelative:domain\\model\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\asp.net hands-on\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|solutionrelative:asp.net hands-on\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\application\\dto\\pagedresultdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|solutionrelative:application\\dto\\pagedresultdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\asp.net hands-on\\controllers\\discountdayscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|solutionrelative:asp.net hands-on\\controllers\\discountdayscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\asp.net hands-on\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B8198CF-6014-A033-6622-E448568C9F7E}|ASP.NET Hands-on\\API.csproj|solutionrelative:asp.net hands-on\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\application\\interface\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|solutionrelative:application\\interface\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|c:\\users\\phong.nguyen2\\onedrive - orient\\desktop\\mock project\\asp.net hands-on\\application\\service\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{80982964-B956-4F74-8629-D7E0A634FCC2}|Application\\Application.csproj|solutionrelative:application\\service\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,72 +34,226 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 38,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:136:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:145:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:144:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:145:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:139:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:144:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:147:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:148:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:138:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:134:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:135:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:143:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:134:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:135:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:137:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:138:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:139:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:141:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:142:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:140:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:146:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:137:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:140:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:136:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:141:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "IProductsFetchingApiByUrl.cs",
-              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Interface\\IProductsFetchingApiByUrl.cs",
-              "RelativeDocumentMoniker": "Application\\Interface\\IProductsFetchingApiByUrl.cs",
-              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Interface\\IProductsFetchingApiByUrl.cs*",
-              "RelativeToolTip": "Application\\Interface\\IProductsFetchingApiByUrl.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "ApiResponse.cs",
+              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Domain\\Model\\ApiResponse.cs",
+              "RelativeDocumentMoniker": "Domain\\Model\\ApiResponse.cs",
+              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Domain\\Model\\ApiResponse.cs",
+              "RelativeToolTip": "Domain\\Model\\ApiResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T04:08:25.655Z",
+              "WhenOpened": "2026-05-05T09:03:42.87Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "MockController.cs",
-              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\MockController.cs",
-              "RelativeDocumentMoniker": "ASP.NET Hands-on\\Controllers\\MockController.cs",
-              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\MockController.cs",
-              "RelativeToolTip": "ASP.NET Hands-on\\Controllers\\MockController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Title": "PagedResultDto.cs",
+              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\DTO\\PagedResultDto.cs",
+              "RelativeDocumentMoniker": "Application\\DTO\\PagedResultDto.cs",
+              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\DTO\\PagedResultDto.cs",
+              "RelativeToolTip": "Application\\DTO\\PagedResultDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T04:01:58.298Z",
+              "WhenOpened": "2026-05-05T06:47:02.375Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "ProductsController.cs",
               "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\ProductsController.cs",
               "RelativeDocumentMoniker": "ASP.NET Hands-on\\Controllers\\ProductsController.cs",
               "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\ProductsController.cs",
               "RelativeToolTip": "ASP.NET Hands-on\\Controllers\\ProductsController.cs",
-              "ViewState": "AgIAAHcAAAAAAAAAAAAswLgAAAASAAAAAAAAAA==",
+              "ViewState": "AgIAABYAAAAAAAAAAAAQwCYAAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T03:39:14.66Z",
+              "WhenOpened": "2026-05-05T06:36:15.064Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Service\\AuthService.cs",
+              "RelativeDocumentMoniker": "Application\\Service\\AuthService.cs",
+              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Service\\AuthService.cs",
+              "RelativeToolTip": "Application\\Service\\AuthService.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAtwDgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-28T06:34:24.914Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "DiscountDaysController.cs",
-              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\DiscountDaysController.cs",
-              "RelativeDocumentMoniker": "ASP.NET Hands-on\\Controllers\\DiscountDaysController.cs",
-              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\DiscountDaysController.cs",
-              "RelativeToolTip": "ASP.NET Hands-on\\Controllers\\DiscountDaysController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Interface\\IAuthService.cs",
+              "RelativeDocumentMoniker": "Application\\Interface\\IAuthService.cs",
+              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\Application\\Interface\\IAuthService.cs",
+              "RelativeToolTip": "Application\\Interface\\IAuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T03:31:30.942Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-28T06:33:57.301Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Program.cs",
-              "RelativeDocumentMoniker": "ASP.NET Hands-on\\Program.cs",
-              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Program.cs",
-              "RelativeToolTip": "ASP.NET Hands-on\\Program.cs",
-              "ViewState": "AgIAAKkAAAAAAAAAAIAwwL4AAABTAAAAAAAAAA==",
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "ASP.NET Hands-on\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\phong.nguyen2\\OneDrive - Orient\\Desktop\\Mock Project\\ASP.NET Hands-on\\ASP.NET Hands-on\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "ASP.NET Hands-on\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAowC4AAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-16T03:25:55.002Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-28T02:23:04.773Z"
             }
           ]
         }

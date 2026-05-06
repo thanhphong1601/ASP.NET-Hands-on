@@ -3,6 +3,6 @@
     public interface IAuthService
     {
         Task<bool> ValidateUserAsync(string username, string password, CancellationToken cancellationToken);
-        string IssueJwtAdminAsync(string username);
+        Task<string> IssueJwtAdminAsync(string username);
     }
 }

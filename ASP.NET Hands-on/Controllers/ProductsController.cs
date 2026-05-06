@@ -1,10 +1,12 @@
-﻿using ASP.NET_Hands_on.Application.DTO;
+﻿using ASP.NET_Hands_on.Application.CQRS.Products;
+using ASP.NET_Hands_on.Application.DTO;
 using ASP.NET_Hands_on.Application.Interface;
-using ASP.NET_Hands_on.Application.CQRS.Products;
 using ASP.NET_Hands_on.Domain.Model;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
+using Application.DTO;
 
 namespace ASP.NET_Hands_on.Controllers
 {
@@ -14,7 +16,6 @@ namespace ASP.NET_Hands_on.Controllers
     {
         private readonly ILogger<ProductsController> _logger;
         private readonly IMediator _mediator;
-        private readonly ProductValidator validator = new ProductValidator();
         private readonly IProductsFetchingApiByUrl _productsFetchingApiByUrl;
         private readonly IConfiguration _configuration;
 
@@ -30,11 +31,14 @@ namespace ASP.NET_Hands_on.Controllers
         /// This api is used to get all products in database, only admin can access this api, if you want to test, please login with admin account to get token and add it to header with key "Authorization" and value "Bearer {token}"
         /// </summary>
         // api/products?pageNumber=1&numberOrProduct=30
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<object>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? numberOrProduct, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        //[ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<PagedResult<ProductDto>>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to ProductsController.GetAll");
             // read defaults from configuration
@@ -42,13 +46,13 @@ namespace ASP.NET_Hands_on.Controllers
             var defaultPageSize = _configuration.GetValue<int?>("Paging:PageSize") ?? 30;
 
             var page = pageNumber.HasValue && pageNumber.Value > 0 ? pageNumber.Value : defaultPageNumber;
-            var size = numberOrProduct.HasValue && numberOrProduct.Value > 0 ? numberOrProduct.Value : defaultPageSize;
+            var size = pageSize.HasValue && pageSize.Value > 0 ? pageSize.Value : defaultPageSize;
 
             var (items, totalCount) = await _mediator.Send(new GetAllProductsQuery(page, size), cancellationToken);
 
             var totalPages = (int)Math.Ceiling(totalCount / (double)size);
 
-            var pageResult = new
+            var pageResult = new PagedResult<ProductDto>
             {
                 PageNumber = page,
                 PageSize = size,
@@ -57,18 +61,37 @@ namespace ASP.NET_Hands_on.Controllers
                 Items = items
             };
 
-            var apiResp = new ApiResponse<object>(pageResult, 200, "Request successful");
+            var apiResp = new ApiResponse<PagedResult<ProductDto>>(pageResult, 200, "Request successful");
             return StatusCode(apiResp.StatusCode, apiResp);
         }
 
         [HttpGet("search")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<object>>> GetByProductName([FromQuery] string keyword, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponse<PagedResult<ProductDto>>>> GetProductByKeyword(CancellationToken cancellationToken, [FromQuery] string? keyword, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 30)
         {
             _logger.LogInformation("Run to ProductsController.GetByProductName - keyword: {Keyword}", keyword);
-            var productsFound = await _mediator.Send(new SearchProductsQuery(keyword), cancellationToken);
-            var apiResp = new ApiResponse<object>(productsFound, 200, "Request successful");
+
+            if (pageSize < 0) pageSize = 30;
+            if (pageNumber < 1) pageNumber = 1;
+            if (string.IsNullOrEmpty(keyword)) keyword = "";
+
+            var (items, total) = await _mediator.Send(new SearchProductsQuery(pageNumber, pageSize, keyword), cancellationToken);
+
+            var totalPages = (int)Math.Ceiling(total / (double)pageSize);
+
+            var pageResult = new PagedResult<ProductDto>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = total,
+                TotalPages = totalPages,
+                Items = items
+            };
+
+            var apiResp = new ApiResponse<PagedResult<ProductDto>>(pageResult, 200, "Request successful");
             return Ok(apiResp);
         }
 
@@ -76,18 +99,14 @@ namespace ASP.NET_Hands_on.Controllers
         //[Authorize(Roles = "Admin")]
         [HttpPost]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status201Created)]
-        public async Task<ActionResult<ApiResponse<object>>> Create([FromBody] Product newProduct, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponse<Product>>> Create([FromBody] Product newProduct, CancellationToken cancellationToken)
         {
-            var validationResult = validator.Validate(newProduct);
-
-            if (!validationResult.IsValid) { 
-                return BadRequest(validationResult.Errors);
-            }
-
             _logger.LogInformation("Run to ProductsController.Create - creating product {ProductId}", newProduct.ProductId);
             var created = await _mediator.Send(new CreateProductCommand(newProduct), cancellationToken);
-            var apiResp = new ApiResponse<object>(created, 201, "Created");
+            var apiResp = new ApiResponse<Product>(created, 201, "Created");
             return CreatedAtAction(nameof(GetAll), new { id = created.Id }, apiResp);
         }
 
@@ -95,8 +114,10 @@ namespace ASP.NET_Hands_on.Controllers
         //[Authorize(Roles = "Admin")]
         [HttpPost("many")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status201Created)]
-        public async Task<ActionResult<ApiResponse<object>>> CreateMany([FromBody] List<Product> productList, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponse<List<Product>>>> CreateMany([FromBody] List<Product> productList, CancellationToken cancellationToken)
         {
             if (productList == null || productList.Count == 0)
             {
@@ -104,27 +125,23 @@ namespace ASP.NET_Hands_on.Controllers
             }
 
             var created = await _mediator.Send(new CreateManyProductsCommand(productList), cancellationToken);
-            var apiResp = new ApiResponse<object>(created, 201, "Created");
+            var apiResp = new ApiResponse<List<Product>>(created, 201, "Created");
             return CreatedAtAction(nameof(GetAll), null, apiResp);
         }
 
         //PUT: api/products/5
         //[Authorize(Roles = "Admin")]
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<object>>> Update(int id, [FromBody] Product updateData, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponse<Product>>> Update(int id, [FromBody] Product updateData, CancellationToken cancellationToken)
         {
-            var validationResult = validator.Validate(updateData);
-
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }
 
             _logger.LogInformation("Run to ProductsController.Update - id: {Id}", id);
             var updated = await _mediator.Send(new UpdateProductCommand(id, updateData), cancellationToken);
-            var apiResp = new ApiResponse<object>(updated, 200, "Updated");
+            var apiResp = new ApiResponse<Product>(updated, 200, "Updated");
             return Ok(apiResp);
             
         }
@@ -133,8 +150,10 @@ namespace ASP.NET_Hands_on.Controllers
         //PATCH: api/products/5
         [HttpPatch("{id}/update")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<object>>> Patch(int id, [FromQuery] ProductPatchRequest patchRequest, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponse<Product>>> Patch(int id, [FromQuery] ProductPatchRequest patchRequest, CancellationToken cancellationToken)
         {
             var validationResult = new ProductPatchRequestValidator().Validate(patchRequest);
             if (!validationResult.IsValid)
@@ -142,20 +161,21 @@ namespace ASP.NET_Hands_on.Controllers
                 return BadRequest(validationResult.Errors);
             }
             var patched = await _mediator.Send(new PatchProductCommand(id, patchRequest), cancellationToken);
-            var apiResp = new ApiResponse<object>(patched, 200, "Patched");
+            var apiResp = new ApiResponse<Product>(patched, 200, "Patched");
             return Ok(apiResp);
         }
 
         //[Authorize(Roles = "Admin")]
         //DELETE: api/products/5
         [HttpDelete("{id}")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<object>>> Delete(int id, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
             await _mediator.Send(new DeleteProductCommand(id), cancellationToken);
-            var apiResp = new ApiResponse<object>(null, 200, "Deleted");
-            return Ok(apiResp);
+           
+            return NoContent();
         }
 
         //GET: api/products/dummyjson

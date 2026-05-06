@@ -51,8 +51,6 @@ namespace ASP.NET_Hands_on.Application.Service
             return true;
         }
 
-       
-
         public async Task<Order> CreateOrderAsync(List<int> productIds, string email, CancellationToken cancellationToken)
         {
             _logger.LogInformation("OrderService.CreateOrderAsync - creating order with {Count} productIds", productIds?.Count ?? 0);
@@ -60,44 +58,45 @@ namespace ASP.NET_Hands_on.Application.Service
             if (productIds == null || productIds.Count == 0)
                 throw new ArgumentException("There is no products found");
 
-            // group product ids to get quantities
             var productQuantities = productIds.GroupBy(id => id)
                 .ToDictionary(g => g.Key, g => g.Count());
 
-            // validate product ids and create order
-            var newOrder = new Order();
-            await _orderRepository.AddOrderAsync(newOrder, cancellationToken);
-            await _orderRepository.SaveChangesAsync(cancellationToken);
-
             var validProductIds = productQuantities.Keys.ToList();
+
             var validProducts = await _orderRepository.GetProductsByIdsAsync(validProductIds, cancellationToken);
 
-            // create order-product records
+            if (validProducts.Count == 0)
+                throw new ArgumentException("All provided products are invalid");
+
+            var newOrder = new Order();
+
             foreach (var kv in productQuantities)
             {
                 var productId = kv.Key;
                 var qty = kv.Value;
 
-                if (!validProducts.ContainsKey(productId))
-                    continue; // ignore invalid product ids
+                if (!validProducts.TryGetValue(productId, out var product))
+                    continue; 
 
-                await _orderRepository.AddOrderProductAsync(new OrderProduct
+                // Thêm trực tiếp OrderProduct vào list của Order cha
+                newOrder.OrderProducts.Add(new OrderProduct
                 {
-                    OrderId = newOrder.OrderId,
                     ProductId = productId,
                     Quantity = qty
-                }, cancellationToken);
+                    // TUYỆT ĐỐI KHÔNG gán OrderId = newOrder.OrderId ở đây.
+                    // EF Core sẽ tự động biết và gán ID sau khi Insert Order thành công!
+                });
+
+                // TỐI ƯU HÓA: Tính luôn tổng tiền ngay trên RAM, 
+                // không cần gọi hàm CalculateTotalPrice... tốn thêm 1 nhịp query DB nữa.
+                newOrder.TotalPrice += (product.Price * qty); 
             }
 
+            await _orderRepository.AddOrderAsync(newOrder, cancellationToken);
             await _orderRepository.SaveChangesAsync(cancellationToken);
-            await CalculateTotalPriceWhenAddOrRemoveProduct(newOrder.OrderId);
-
-            var createdOrder = new OrderDetailDto(newOrder.OrderId, 
-                newOrder.OrderDate, 
-                newOrder.TotalPrice, 
-                validProducts.Values.Select(p => new ProductDto(p.ProductId, p.Name ?? string.Empty, p.Price)).ToList());
 
             _logger.LogInformation("OrderService.CreateOrderAsync - created order {OrderId}", newOrder.OrderId);
+
             return newOrder;
         }
 
@@ -110,10 +109,10 @@ namespace ASP.NET_Hands_on.Application.Service
             if (order == null) throw new KeyNotFoundException($"Order with id {orderId} was not found.");
 
             var products = order.OrderProducts
-                .Select(op => new ProductDto(op.Product.ProductId, op.Product.Name ?? string.Empty, op.Product.Price))
+                .Select(op => new ProductDto(op.Product.Id, op.Product.ProductId, op.Product.Name ?? string.Empty, op.Product.Price))
                 .ToList();
 
-            var orderDetails = new DTO.OrderDetailDto(order.OrderId, order.OrderDate, order.TotalPrice, products);
+            var orderDetails = new DTO.OrderDetailDto(order.OrderId, order.OrderDate, order.TotalPrice, products, order.Customer?.Name);
 
             return orderDetails;
         }

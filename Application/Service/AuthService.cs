@@ -29,7 +29,7 @@ namespace ASP.NET_Hands_on.Application.Service
         }
 
         //async if fetch claims from db
-        public string IssueJwtAdminAsync(string username)
+        public Task<string> IssueJwtAdminAsync(string username)
         {
             // For demonstration, we use hardcoded claims. In a real application, these would be based on the authenticated user's data
             // The function is async of not will depend on the fetching data here
@@ -55,7 +55,7 @@ namespace ASP.NET_Hands_on.Application.Service
                 signingCredentials: creds
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
         }
     }
 }

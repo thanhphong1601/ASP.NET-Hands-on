@@ -14,7 +14,7 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
 {
     public record GetOrdersQuery(int PageNumber, int PageSize) : IRequest<(List<Order> Items, int TotalCount)>;
     public record GetOrderByIdQuery(int OrderId) : IRequest<object>;
-    public record CreateOrderCommand(List<int> ProductIds, string Email) : IRequest<Order>;
+    public record CreateOrderCommand(Dictionary<int, int> ProductIdsAndQuantity, string Email, int CustomerId, string CustomerAddress) : IRequest<Order>;
     public record AddProductToOrderCommand(int OrderId, int ProductId, int Quantity) : IRequest<bool>;
     public record DeleteOrderCommand(int OrderId) : IRequest<bool>;
 
@@ -62,10 +62,10 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
             if (order == null) throw new KeyNotFoundException($"Order with id {request.OrderId} was not found.");
 
             var products = order.OrderProducts
-                .Select(op => new ProductDto(op.Product.ProductId, op.Product.Name ?? string.Empty, op.Product.Price))
+                .Select(op => new ProductDto(op.Product.Id, op.Product.ProductId, op.Product.Name ?? string.Empty, op.Product.Price))
                 .ToList();
 
-            var orderDetails = new OrderDetailDto(order.OrderId, order.OrderDate, order.TotalPrice, products);
+            var orderDetails = new OrderDetailDto(order.OrderId, order.OrderDate, order.TotalPrice, products, order.Customer?.Name);
             return orderDetails;
         }
     }
@@ -87,9 +87,9 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
 
         public async Task<Order> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("CreateOrderCommandHandler - creating order with {Count} productIds", request.ProductIds?.Count ?? 0);
+            _logger.LogInformation("CreateOrderCommandHandler - creating order with {Count} productIds", request.ProductIdsAndQuantity?.Count ?? 0);
 
-            if (request.ProductIds == null || request.ProductIds.Count == 0)
+            if (request.ProductIdsAndQuantity == null || request.ProductIdsAndQuantity.Count == 0)
                 throw new ArgumentException("There is no products found");
 
             if (string.IsNullOrWhiteSpace(request.Email))
@@ -98,19 +98,29 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
             if (!_emailService.CheckValidEmail(request.Email))
                 throw new ArgumentException("Invalid email address");
 
-            var productQuantities = request.ProductIds.GroupBy(id => id).ToDictionary(g => g.Key, g => g.Count());
+            if (string.IsNullOrWhiteSpace(request.CustomerAddress))
+                throw new ArgumentException("Email is required");
 
-            var newOrder = new Order();
+            var newOrder = new Order {};
+            if (request is object)
+            {
+                // if CreateOrderCommand carries customer id, set it
+                var custId = (request as CreateOrderCommand)?.CustomerId;
+                if (custId.HasValue) newOrder.CustomerId = custId.Value;
+            }
             await _repo.AddOrderAsync(newOrder, cancellationToken);
             await _repo.SaveChangesAsync(cancellationToken);
 
-            var validProductIds = productQuantities.Keys.ToList();
+            var validProductIds = request.ProductIdsAndQuantity.Keys.ToList();
             var validProducts = await _repo.GetProductsByIdsAsync(validProductIds, cancellationToken);
 
-            foreach (var kv in productQuantities)
+            foreach (var kv in request.ProductIdsAndQuantity)
             {
                 var productId = kv.Key;
                 var qty = kv.Value;
+
+                if (qty <= 0)
+                    continue;
 
                 if (!validProducts.ContainsKey(productId))
                     continue;
@@ -127,6 +137,7 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
 
             var totalPrice = await _repo.CalculateTotalPriceAsync(newOrder.OrderId, cancellationToken);
             var order = await _repo.GetByIdAsync(newOrder.OrderId, cancellationToken);
+            order.Address = request.CustomerAddress;
             if (order != null)
             {
                 order.TotalPrice = totalPrice;
@@ -134,14 +145,14 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
             }
 
             // enqueue email job
-            var emailJob = new EmailJob
-            {
-                To = request.Email,
-                Subject = $"Order Confirmation #{newOrder.OrderId}",
-                Body = $"Your order {newOrder.OrderId} has been created. Total: {newOrder.TotalPrice}"
-            };
+            //var emailJob = new EmailJob
+            //{
+            //    To = request.Email,
+            //    Subject = $"Order Confirmation #{newOrder.OrderId}",
+            //    Body = $"Your order {newOrder.OrderId} has been created. Total: {newOrder.TotalPrice}"
+            //};
 
-            await _queue.QueueEmailAsync(emailJob);
+            //await _queue.QueueEmailAsync(emailJob);
 
             _logger.LogInformation("CreateOrderCommandHandler - created order {OrderId}", newOrder.OrderId);
             return newOrder;

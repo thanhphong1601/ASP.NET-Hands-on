@@ -74,8 +74,8 @@ namespace ASP.NET_Hands_on.Controllers
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status201Created)]
         public async Task<ActionResult<ApiResponse<object>>> CreateOrder([FromBody] OrderCreateRequest request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Run to OrdersController.CreateOrder - List Of Product Id: {@Ids}", request.ProductIds);
-            var order = await _mediator.Send(new CreateOrderCommand(request.ProductIds, request.Email), cancellationToken);
+            _logger.LogInformation("Run to OrdersController.CreateOrder - List Of Product Id: {@Ids}", request.ProductIdsAndQuantity);
+            var order = await _mediator.Send(new CreateOrderCommand(request.ProductIdsAndQuantity, request.Email, request.CustomerId, request.Address), cancellationToken);
             var apiResp = new ApiResponse<object>(order, 201, "Created");
             return CreatedAtAction(nameof(GetById), new { id = order.OrderId }, apiResp);
         }

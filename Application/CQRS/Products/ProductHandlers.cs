@@ -14,7 +14,7 @@ namespace ASP.NET_Hands_on.Application.CQRS.Products
 {
     // Queries and Commands
     public record GetAllProductsQuery(int PageNumber, int PageSize) : IRequest<(List<ProductDto> Items, int TotalCount)>;
-    public record SearchProductsQuery(string Keyword) : IRequest<List<ProductDto>>;
+    public record SearchProductsQuery(int PageNumber, int PageSize, string Keyword) : IRequest<(List<ProductDto> Items, int TotalCount)>;
 
     public record CreateProductCommand(Product NewProduct) : IRequest<Product>;
     public record CreateManyProductsCommand(List<Product> Products) : IRequest<List<Product>>;
@@ -48,7 +48,7 @@ namespace ASP.NET_Hands_on.Application.CQRS.Products
         }
     }
 
-    public class SearchProductsQueryHandler : IRequestHandler<SearchProductsQuery, List<ProductDto>>
+    public class SearchProductsQueryHandler : IRequestHandler<SearchProductsQuery, (List<ProductDto> Items, int TotalCount)>
     {
         private readonly IProductRepository _repo;
         private readonly ILogger<SearchProductsQueryHandler> _logger;
@@ -59,11 +59,15 @@ namespace ASP.NET_Hands_on.Application.CQRS.Products
             _logger = logger;
         }
 
-        public Task<List<ProductDto>> Handle(SearchProductsQuery request, CancellationToken cancellationToken)
+        public async Task<(List<ProductDto> Items, int TotalCount)> Handle(SearchProductsQuery request, CancellationToken cancellationToken)
         {
+            var pageNumber = request.PageNumber <= 0 ? 1 : request.PageNumber;
+            var pageSize = request.PageSize <= 0 ? 30 : request.PageSize;
+
             _logger.LogInformation("SearchProductsQueryHandler - keyword: {Keyword}", request.Keyword);
-            if (string.IsNullOrWhiteSpace(request.Keyword)) return Task.FromResult(new List<ProductDto>());
-            return _repo.SearchByNameOrProductIdAsync(request.Keyword, cancellationToken);
+      
+            (var items, var total) = await _repo.SearchByNameOrProductIdAsync(pageNumber, pageSize, request.Keyword, cancellationToken);
+            return (items, total);
         }
     }
 
@@ -128,9 +132,12 @@ namespace ASP.NET_Hands_on.Application.CQRS.Products
             var product = await _repo.GetByIdAsync(request.Id, cancellationToken);
             if (product == null) throw new KeyNotFoundException("Product not found");
 
-            product.Name = request.UpdateData.Name;
-            product.ProductId = request.UpdateData.ProductId;
-            product.Price = request.UpdateData.Price;
+            if (!string.IsNullOrWhiteSpace(request.UpdateData.Name))
+                product.Name = request.UpdateData.Name;
+            if (string.IsNullOrWhiteSpace(request.UpdateData.ProductId))
+                product.ProductId = request.UpdateData.ProductId;
+            if (request.UpdateData.Price != null)
+                product.Price = request.UpdateData.Price;
 
             await _repo.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("UpdateProductCommandHandler - updated id {Id}", request.Id);

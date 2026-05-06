@@ -10,7 +10,7 @@ namespace ASP.NET_Hands_on.Application.IRepository
     {
         Task<int> CountAsync(CancellationToken cancellationToken);
         Task<List<ProductDto>> GetPagedProductDtosAsync(int pageNumber, int pageSize, CancellationToken cancellationToken);
-        Task<List<ProductDto>> SearchByNameOrProductIdAsync(string keyword, CancellationToken cancellationToken);
+        Task<(List<ProductDto>, int count)> SearchByNameOrProductIdAsync(int pageNumber, int pageSize, string keyword, CancellationToken cancellationToken);
         Task AddAsync(Product product, CancellationToken cancellationToken);
         Task AddRangeAsync(List<Product> products, CancellationToken cancellationToken);
         Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken);

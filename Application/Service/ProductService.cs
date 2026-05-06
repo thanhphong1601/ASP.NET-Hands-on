@@ -41,8 +41,11 @@ namespace ASP.NET_Hands_on.Application.Service
         {
             _logger.LogInformation("ProductService.SearchByNameOrProductIdAsync - keyword: {Keyword}", keyword);
             if (string.IsNullOrWhiteSpace(keyword)) return new List<ProductDto>();
+            int pageNumber = 1;
+            int pageSize = 30;
 
-            return await _productRepository.SearchByNameOrProductIdAsync(keyword, cancellationToken);
+            //await _productRepository.SearchByNameOrProductIdAsync(pageNumber, pageSize, keyword, cancellationToken);
+            return null; 
         }
 
         public async Task<Product> CreateAsync(Product newProduct, CancellationToken cancellationToken)
