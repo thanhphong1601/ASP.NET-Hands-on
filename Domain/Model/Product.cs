@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 
-namespace ASP.NET_Hands_on.Model
+namespace ASP.NET_Hands_on.Domain.Model
 {
     public class Product
     {
@@ -16,20 +16,20 @@ namespace ASP.NET_Hands_on.Model
         public List<DiscountDayProduct> DiscountDayProducts { get; set; } = new();
     }
 
-    public class ProductValidator : AbstractValidator<Product>
-    {
-        public ProductValidator() {
-            RuleFor(p => p.ProductId)
-                .NotEmpty()
-                .Length(5, 10)
-                .WithMessage("ProductId is required.");
-            RuleFor(p => p.Name)
-                .NotEmpty()
-                .MaximumLength(100)
-                .WithMessage("Name is required.");
-            RuleFor(p => p.Price)
-                .GreaterThanOrEqualTo(0)
-                .WithMessage("Price must be greater than or equal to zero.");
-        }
-    }
+    //public class ProductValidator : AbstractValidator<Product>
+    //{
+    //    public ProductValidator() {
+    //        RuleFor(p => p.ProductId)
+    //            .NotEmpty()
+    //            .Length(5, 10)
+    //            .WithMessage("ProductId is required.");
+    //        RuleFor(p => p.Name)
+    //            .NotEmpty()
+    //            .MaximumLength(100)
+    //            .WithMessage("Name is required.");
+    //        RuleFor(p => p.Price)
+    //            .GreaterThanOrEqualTo(0)
+    //            .WithMessage("Price must be greater than or equal to zero.");
+    //    }
+    //}
 }

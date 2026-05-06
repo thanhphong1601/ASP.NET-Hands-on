@@ -1,6 +1,8 @@
-﻿using ASP.NET_Hands_on.Interface;
-using ASP.NET_Hands_on.Model;
-using ASP.NET_Hands_on.DTO;
+﻿using ASP.NET_Hands_on.Application.Interface;
+using ASP.NET_Hands_on.Application.CQRS.Orders;
+using MediatR;
+using ASP.NET_Hands_on.Domain.Model;
+using ASP.NET_Hands_on.Application.DTO;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -12,23 +14,21 @@ namespace ASP.NET_Hands_on.Controllers
     //[Authorize]
     public class OrdersController : ControllerBase
     {
-        private readonly IOrderService _orderService;
         private readonly ILogger<OrdersController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly IEmailService _emailService;
+        private readonly IMediator _mediator;
 
-        public OrdersController(IOrderService orderService, ILogger<OrdersController> logger, IConfiguration configuration, IEmailService emailService)
+        public OrdersController(ILogger<OrdersController> logger, IConfiguration configuration, IMediator mediator)
         {
-            _orderService = orderService;
             _logger = logger;
             _configuration = configuration;
-            _emailService = emailService;
+            _mediator = mediator;
         }
 
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<Model.ApiResponse<object>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<object>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to OrdersController.GetAll");
 
@@ -38,7 +38,7 @@ namespace ASP.NET_Hands_on.Controllers
             var page = pageNumber.HasValue && pageNumber.Value > 0 ? pageNumber.Value : defaultPageNumber;
             var size = pageSize.HasValue && pageSize.Value > 0 ? pageSize.Value : defaultPageSize;
 
-            var (items, totalCount) = await _orderService.GetOrdersAsync(page, size, cancellationToken);
+            var (items, totalCount) = await _mediator.Send(new GetOrdersQuery(page, size), cancellationToken);
 
             var totalPages = (int)Math.Ceiling(totalCount / (double)size);
 
@@ -51,19 +51,19 @@ namespace ASP.NET_Hands_on.Controllers
                 Items = items
             };
 
-            var apiResp = new Model.ApiResponse<object>(pageResult, 200, "Request successful");
+            var apiResp = new ApiResponse<object>(pageResult, 200, "Request successful");
             return StatusCode(apiResp.StatusCode, apiResp);
         }
 
         [HttpGet("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<Model.ApiResponse<object>>> GetById(int id, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<object>>> GetById(int id, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to OrdersController.GetById - Id: {id}", id);
 
-            var order = await _orderService.GetOrderByIdAsync(id, cancellationToken);
-            var apiResp = new Model.ApiResponse<object>(order, 200, "Request successful");
+            var order = await _mediator.Send(new GetOrderByIdQuery(id), cancellationToken);
+            var apiResp = new ApiResponse<object>(order, 200, "Request successful");
             return Ok(apiResp);
 
         }
@@ -71,44 +71,22 @@ namespace ASP.NET_Hands_on.Controllers
         // CLient only needs to send a List consisting of products' id: [1, 2, 1]
         [HttpPost]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status201Created)]
-        public async Task<ActionResult<Model.ApiResponse<object>>> CreateOrder([FromBody] OrderCreateRequest request, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status201Created)]
+        public async Task<ActionResult<ApiResponse<object>>> CreateOrder([FromBody] OrderCreateRequest request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Run to OrdersController.CreateOrder - List Of Product Id: {@Ids}", request.ProductIds);
-
-            if (string.IsNullOrWhiteSpace(request.Email))
-            {
-                return BadRequest(new Model.ApiResponse<object>(null, 400, "Email is required"));
-            }
-
-            if (!_emailService.CheckValidEmail(request.Email))
-            {
-                return BadRequest(new Model.ApiResponse<object>(null, 400, "Invalid email address"));
-            }
-
-            var order = await _orderService.CreateOrderAsync(request.ProductIds, request.Email, cancellationToken);
-
-            // enqueue email job
-            var queue = HttpContext.RequestServices.GetRequiredService<IBackgroundTaskQueue>();
-            var emailJob = new Model.EmailJob
-            {
-                To = request.Email,
-                Subject = $"Order Confirmation #{order.OrderId}",
-                Body = $"Your order {order.OrderId} has been created. Total: {order.TotalPrice}"
-            };
-            await queue.QueueEmailAsync(emailJob);
-
-            var apiResp = new Model.ApiResponse<object>(order, 201, "Created");
+            _logger.LogInformation("Run to OrdersController.CreateOrder - List Of Product Id: {@Ids}", request.ProductIdsAndQuantity);
+            var order = await _mediator.Send(new CreateOrderCommand(request.ProductIdsAndQuantity, request.Email, request.CustomerId, request.Address), cancellationToken);
+            var apiResp = new ApiResponse<object>(order, 201, "Created");
             return CreatedAtAction(nameof(GetById), new { id = order.OrderId }, apiResp);
         }
 
         [HttpPost("{orderId}/products/{productId}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> AddProductToOrder(int orderId, int productId, [FromQuery] int quantity = 1, CancellationToken cancellationToken = default)
         {
 
-            var result = await _orderService.AddProductToOrderAsync(orderId, productId, quantity, cancellationToken);
+            var result = await _mediator.Send(new AddProductToOrderCommand(orderId, productId, quantity), cancellationToken);
             if (result) return NoContent();
             return BadRequest("Could not add product to order.");
 
@@ -116,10 +94,10 @@ namespace ASP.NET_Hands_on.Controllers
 
         [HttpDelete("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<Model.ApiResponse<object>>> Delete(int id, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<object>>> Delete(int id, CancellationToken cancellationToken)
         {
-            var deleted = await _orderService.DeleteOrderAsync(id, cancellationToken);
+            var deleted = await _mediator.Send(new DeleteOrderCommand(id), cancellationToken);
             if (!deleted) return NotFound();
             return Ok();
         }

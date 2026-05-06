@@ -1,23 +1,22 @@
-using ASP.NET_Hands_on.Interface;
-using ASP.NET_Hands_on.DTO;
-using ASP.NET_Hands_on.Model;
-using ASP.NET_Hands_on.DatabseContext;
-using Microsoft.EntityFrameworkCore;
+using ASP.NET_Hands_on.Application.Interface;
+using ASP.NET_Hands_on.Application.DTO;
+using ASP.NET_Hands_on.Domain.Model;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using ASP.NET_Hands_on.Application.IRepository;
 
-namespace ASP.NET_Hands_on.Service
+namespace ASP.NET_Hands_on.Application.Service
 {
     public class DiscountDayService : IDiscountDayService
     {
-        private readonly AppDbContext _db;
+        private readonly IDiscountDayRepository _discountDayRepository;
         private readonly ILogger<DiscountDayService> _logger;
         private readonly IMemoryCache _cache;
         private const string CACHE_KEY = "DiscountDay_All";
 
-        public DiscountDayService(AppDbContext db, ILogger<DiscountDayService> logger, IMemoryCache cache)
+        public DiscountDayService(IDiscountDayRepository discountDayRepository, ILogger<DiscountDayService> logger, IMemoryCache cache)
         {
-            _db = db;
+            _discountDayRepository = discountDayRepository;
             _logger = logger;
             _cache = cache;
         }
@@ -30,11 +29,7 @@ namespace ASP.NET_Hands_on.Service
                 return cached!;
             }
 
-            var items = await _db.DiscountDays
-                .AsNoTracking()
-                .Include(dd => dd.DiscountDayProducts)
-                    .ThenInclude(dpd => dpd.Product)
-                .ToListAsync(cancellationToken);
+            var items = await _discountDayRepository.GetAllWithProductsAsync(cancellationToken);
 
             var result = items.Select(dd => new DiscountDayDto(
                 dd.Id,
@@ -42,7 +37,7 @@ namespace ASP.NET_Hands_on.Service
                 dd.CreatedDate.Date,
                 dd.FromDate,
                 dd.ToDate,
-                dd.DiscountDayProducts.Select(dpd => new ProductDto(dpd.Product.ProductId ?? string.Empty, dpd.Product.Name ?? string.Empty, dpd.Product.Price)).ToList()
+                dd.DiscountDayProducts.Select(dpd => new ProductDto(dpd.Product.Id, dpd.Product.ProductId ?? string.Empty, dpd.Product.Name ?? string.Empty, dpd.Product.Price)).ToList()
             )).ToList();
 
             // cache for 60 seconds
@@ -61,27 +56,26 @@ namespace ASP.NET_Hands_on.Service
                 ToDate = dto.ToDate
             };
 
-            await _db.DiscountDays.AddAsync(entity, cancellationToken);
-            await _db.SaveChangesAsync(cancellationToken);
+            await _discountDayRepository.AddDiscountDayAsync(entity, cancellationToken);
+            await _discountDayRepository.SaveChangesAsync(cancellationToken);
 
-            var products = await _db.Products.Where(p => dto.ProductIds.Contains(p.Id)).ToListAsync(cancellationToken);
+            var products = await _discountDayRepository.GetProductsByIdsAsync(dto.ProductIds, cancellationToken);
 
-            // add relations
             foreach (var p in products)
             {
-                await _db.Set<DiscountDayProduct>().AddAsync(new DiscountDayProduct
+                await _discountDayRepository.AddDiscountDayProductAsync(new DiscountDayProduct
                 {
                     DiscountDayId = entity.Id,
                     ProductId = p.Id
                 }, cancellationToken);
             }
 
-            await _db.SaveChangesAsync(cancellationToken);
+            await _discountDayRepository.SaveChangesAsync(cancellationToken);
 
             // invalidate cache
             _cache.Remove(CACHE_KEY);
 
-            var displayedProducts = products.Select(p => new ProductDto(p.ProductId ?? string.Empty, p.Name ?? string.Empty, p.Price)).ToList();
+            var displayedProducts = products.Select(p => new ProductDto(p.Id, p.ProductId ?? string.Empty, p.Name ?? string.Empty, p.Price)).ToList();
             // return created dto
             var created = new DiscountDayDto(entity.Id, entity.DayName, entity.CreatedDate, entity.FromDate, entity.ToDate, displayedProducts);
             return created;

@@ -1,5 +1,8 @@
-using ASP.NET_Hands_on.DTO;
-using ASP.NET_Hands_on.Interface;
+using ASP.NET_Hands_on.Application.DTO;
+using ASP.NET_Hands_on.Application.Interface;
+using ASP.NET_Hands_on.Application.CQRS.DiscountDays;
+using MediatR;
+using ASP.NET_Hands_on.Domain.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP.NET_Hands_on.Controllers
@@ -8,32 +11,32 @@ namespace ASP.NET_Hands_on.Controllers
     [Route("api/[controller]")]
     public class DiscountDaysController : ControllerBase
     {
-        private readonly IDiscountDayService _service;
+        private readonly IMediator _mediator;
 
-        public DiscountDaysController(IDiscountDayService service)
+        public DiscountDaysController(IMediator mediator)
         {
-            _service = service;
+            _mediator = mediator;
         }
 
         // GET: api/discountdays
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<Model.ApiResponse<object>>> GetAll(CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<object>>> GetAll(CancellationToken cancellationToken)
         {
-            var items = await _service.GetAllAsync(cancellationToken);
-            var apiResp = new Model.ApiResponse<object>(items, 200, "Request successful");
+            var items = await _mediator.Send(new GetAllDiscountDaysQuery(), cancellationToken);
+            var apiResp = new ApiResponse<object>(items, 200, "Request successful");
             return Ok(apiResp);
         }
 
         // POST: api/discountdays
         [HttpPost]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Model.ApiResponse<object>), StatusCodes.Status201Created)]
-        public async Task<ActionResult<Model.ApiResponse<object>>> Create([FromBody] DiscountDayRequestDto dto, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status201Created)]
+        public async Task<ActionResult<ApiResponse<object>>> Create([FromBody] DiscountDayRequestDto dto, CancellationToken cancellationToken)
         {
-            var created = await _service.CreateAsync(dto, cancellationToken);
-            var apiResp = new Model.ApiResponse<object>(created, 201, "Created");
+            var created = await _mediator.Send(new CreateDiscountDayCommand(dto), cancellationToken);
+            var apiResp = new ApiResponse<object>(created, 201, "Created");
             return CreatedAtAction(nameof(GetAll), new { id = created.Id }, apiResp);
         }
     }

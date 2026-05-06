@@ -1,6 +1,7 @@
-﻿using ASP.NET_Hands_on.DTO;
-using ASP.NET_Hands_on.Interface;
+﻿using ASP.NET_Hands_on.Application.DTO;
+using ASP.NET_Hands_on.Application.Interface;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -43,6 +44,18 @@ namespace ASP.NET_Hands_on.Controllers
                 throw new AuthenticationException();
             }
 
+            //var token = await _authService.IssueJwtAdminAsync(request.UserName);
+
+            //var cookieOptions = new CookieOptions
+            //{
+            //    HttpOnly = true,   // JavaScript bên Angular sẽ không thể đọc được token này
+            //    Secure = true,     // Lưu ý: Đặt thành false nếu bạn đang test ở http://localhost
+            //    SameSite = SameSiteMode.Strict, // Cấu hình chuẩn để ngăn chặn tấn công giả mạo (CSRF)
+            //    Expires = DateTimeOffset.UtcNow.AddMinutes(10) // Nên set khớp với thời gian hết hạn của JWT
+            //};
+
+            //Response.Cookies.Append("auth_token", token, cookieOptions);
+
             return Ok(new { Token = _authService.IssueJwtAdminAsync(request.UserName) });
         }
 
@@ -54,6 +67,21 @@ namespace ASP.NET_Hands_on.Controllers
             {
                 UserId = User.FindFirst("sub")?.Value,
                 Tenant = User.FindFirst("tenant")?.Value
+            });
+        }
+
+        // auth/userdetails
+        [HttpPost("userdetails")]
+        public async Task<IActionResult> GetUserDetails([FromBody] UserLoginRequest request)
+        {
+            Console.WriteLine($"UserName: {request.UserName}, Password: {request.Password}");
+            if (request.UserName != "admin" || request.Password != "Admin@123")
+                throw new AuthenticationException();
+
+            return Ok(new
+            {
+                Username = "Admin",
+                Role = "Admin"
             });
         }
     }

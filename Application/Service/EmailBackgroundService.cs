@@ -1,10 +1,10 @@
-using ASP.NET_Hands_on.Interface;
-using ASP.NET_Hands_on.Model;
+using ASP.NET_Hands_on.Application.Interface;
+using ASP.NET_Hands_on.Domain.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace ASP.NET_Hands_on.Service
+namespace ASP.NET_Hands_on.Application.Service
 {
     public class EmailBackgroundService : BackgroundService
     {

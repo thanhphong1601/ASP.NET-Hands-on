@@ -1,4 +1,4 @@
-namespace ASP.NET_Hands_on.Model
+namespace ASP.NET_Hands_on.Domain.Model
 {
     public class EmailJob
     {

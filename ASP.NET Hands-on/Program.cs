@@ -1,17 +1,21 @@
 using Application;
+using ASP.NET_Hands_on.Application.CQRS.Products;
+using ASP.NET_Hands_on.Application.Interface;
+using ASP.NET_Hands_on.Application.IRepository;
+using ASP.NET_Hands_on.Application.Service;
 using ASP.NET_Hands_on.Data;
 using ASP.NET_Hands_on.DatabseContext;
+using ASP.NET_Hands_on.Domain.Model;
 using ASP.NET_Hands_on.Exceptions;
-using ASP.NET_Hands_on.Interface;
-using ASP.NET_Hands_on.Middlewares;
-using ASP.NET_Hands_on.Model;
-using ASP.NET_Hands_on.Service;
+using ASP.NET_Hands_on.Infrastructure;
+using ASP.NET_Hands_on.Persistence.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Persistence.Data;
+using Polly;
+using Polly.Extensions.Http;
 using Refit;
 using Serilog;
 using System.Text;
@@ -63,15 +67,15 @@ builder.Services
             {
                 context.HandleResponse();
 
-            var response = context.Response;
-            response.StatusCode = StatusCodes.Status401Unauthorized;
-            response.ContentType = "application/json";
+                var response = context.Response;
+                response.StatusCode = StatusCodes.Status401Unauthorized;
+                response.ContentType = "application/json";
 
-            var payload = new
-            {
-                error = "Unauthorized",
-                message = string.IsNullOrEmpty(context.ErrorDescription) ? "Authentication token is missing or invalid." : context.ErrorDescription
-            };
+                var payload = new
+                {
+                    error = "Unauthorized",
+                    message = string.IsNullOrEmpty(context.ErrorDescription) ? "Authentication token is missing or invalid." : context.ErrorDescription
+                };
 
                 await response.WriteAsync(JsonSerializer.Serialize(payload));
             },
@@ -111,12 +115,17 @@ builder.Services.AddControllers()
 builder.Services.AddOpenApi();
 builder.Services.AddOpenApiDocument();
 
+// Register MediatR handlers
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetAllProductsQuery).Assembly));
+
 // Register product and order services
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddTransient<IAuthService, AuthService>();
-builder.Services.AddScoped<IDiscountDayService, DiscountDayService>();
-
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IDiscountDayRepository, DiscountDayRepository>();
 // memory cache
 builder.Services.AddMemoryCache();
 
@@ -134,35 +143,48 @@ builder.Services.AddHealthChecks();
 // Add CORS policy to allow requests from any origin (for testing purposes)
 builder.Services.AddCors(options =>
 {
+    //options.AddPolicy("AllowAngular", policy =>
+    //{
+    //    policy.WithOrigins("http://localhost:4200")
+    //          .AllowAnyHeader()
+    //          .AllowAnyMethod()
+    //          .AllowCredentials();
+    //});
     options.AddPolicy("AllowAll", policy =>
     {
         policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod();
+              
     });
 });
 
-// Add database
-var connectionString = "Data Source=MyAppData.db";
-builder.Services.AddSqlite<AppDbContext>(connectionString,
-    optionsAction: options => options.UseSeeding((context, _) =>
-    {
-        if (!context.Set<Product>().Any())
-        {
-            context.Set<Product>().AddRange(
-                new Product { Name = "Laptop Asus", ProductId = "LTA01", Price = 17000000 },
-                new Product { Name = "Bàn phím cơ", ProductId = "BPC01", Price = 1500000 },
-                new Product { Name = "Chuột không dây", ProductId = "PKC01", Price = 500000 },
-                new Product { Name = "Màn hình", ProductId = "MH01", Price = 3000000 }
-            );
-            context.SaveChanges();
-        }
-    }));
+//Add database
+builder.Services.AddPersistenceService(builder.Configuration);
 
 // Add Refit
+//Polly retry config
+var retryPolicy = HttpPolicyExtensions
+    .HandleTransientHttpError() // Tự động bắt lỗi 5xx, 408 Timeout, rớt mạng
+    .WaitAndRetryAsync(3, retryAttempt =>
+        TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+        onRetry: (outcome, timespan, retryAttempt, context) =>
+        {
+            // Log ra để biết nó đang thử lại (có thể dùng Serilog ở đây)
+            Console.WriteLine($"Đang thử lại lần thứ {retryAttempt} sau {timespan.TotalSeconds} giây...");
+        });
+
+var mockBase = builder.Configuration.GetValue<string>("MockApi:BaseUrl") ?? "http://localhost:5225";
 builder.Services
     .AddRefitClient<IProductsFetchingApiByUrl>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://dummyjson.com/"));
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri(mockBase))
+    .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+    {
+        // allow multiple concurrent connections to the same server (useful when calling local endpoints)
+        MaxConnectionsPerServer = 10
+    })
+    .AddPolicyHandler(retryPolicy);
+//.ConfigureHttpClient(c => c.BaseAddress = new Uri("https://dummyjson.com/"));
 
 // Enable Serilog integration with the generic host
 builder.Host.UseSerilog();
@@ -179,10 +201,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUi();
 
     app.UseCors("AllowAll");
+
 }
 
 //config this CORS when production, only allow specific origins
-app.UseCors("AllowAll");
+//app.UseCors("AllowAngular");
 
 app.MapHealthChecks("/health", new HealthCheckOptions
 {
@@ -215,7 +238,7 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/error");
-    
+
     app.UseHsts();
 }
 {

@@ -1,25 +1,27 @@
-﻿using ASP.NET_Hands_on.Interface;
+﻿using Application;
+using ASP.NET_Hands_on.Application.Interface;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace ASP.NET_Hands_on.Service
+namespace ASP.NET_Hands_on.Application.Service
 {
     public class AuthService : IAuthService
     {
-        private readonly ILogger<ProductService> _logger;
+        private readonly JwtSettings _jwtSettings;
 
-        public AuthService(ILogger<ProductService> logger)
+        public AuthService(IOptions<JwtSettings> jwtSettings)
         {
-            _logger = logger;
+            _jwtSettings = jwtSettings?.Value ?? throw new ArgumentNullException(nameof(jwtSettings));
         }
 
 
         public async Task<bool> ValidateUserAsync(string username, string password, CancellationToken cancellationToken)
         {
-            if (username == "Admin" && password == "Admin@123")
+            if (username == "admin" && password == "Admin@123")
             {
                 return true;
             }
@@ -27,7 +29,7 @@ namespace ASP.NET_Hands_on.Service
         }
 
         //async if fetch claims from db
-        public string IssueJwtAdminAsync(string username)
+        public Task<string> IssueJwtAdminAsync(string username)
         {
             // For demonstration, we use hardcoded claims. In a real application, these would be based on the authenticated user's data
             // The function is async of not will depend on the fetching data here
@@ -41,19 +43,19 @@ namespace ASP.NET_Hands_on.Service
                new Claim("tenant", "vn")
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey!));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(10),
                 signingCredentials: creds
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(token));
         }
     }
 }

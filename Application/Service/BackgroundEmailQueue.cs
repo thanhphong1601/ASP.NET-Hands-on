@@ -1,8 +1,8 @@
-using ASP.NET_Hands_on.Interface;
-using ASP.NET_Hands_on.Model;
+using ASP.NET_Hands_on.Application.Interface;
+using ASP.NET_Hands_on.Domain.Model;
 using System.Threading.Channels;
 
-namespace ASP.NET_Hands_on.Service
+namespace ASP.NET_Hands_on.Application.Service
 {
     public class BackgroundEmailQueue : IBackgroundTaskQueue
     {
