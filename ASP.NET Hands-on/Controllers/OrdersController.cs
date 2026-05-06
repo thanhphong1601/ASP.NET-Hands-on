@@ -6,6 +6,8 @@ using ASP.NET_Hands_on.Application.DTO;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Domain.Model;
+using Application.DTO;
 
 namespace ASP.NET_Hands_on.Controllers
 {
@@ -27,8 +29,8 @@ namespace ASP.NET_Hands_on.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<object>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<PagedResult<Order>>>> GetAllOrders([FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to OrdersController.GetAll");
 
@@ -42,7 +44,7 @@ namespace ASP.NET_Hands_on.Controllers
 
             var totalPages = (int)Math.Ceiling(totalCount / (double)size);
 
-            var pageResult = new
+            var pageResult = new PagedResult<Order>
             {
                 PageNumber = page,
                 PageSize = size,
@@ -51,19 +53,19 @@ namespace ASP.NET_Hands_on.Controllers
                 Items = items
             };
 
-            var apiResp = new ApiResponse<object>(pageResult, 200, "Request successful");
+            var apiResp = new ApiResponse<PagedResult<Order>>(pageResult, 200, "Request successful");
             return StatusCode(apiResp.StatusCode, apiResp);
         }
 
         [HttpGet("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<object>>> GetById(int id, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<OrderDetailDto>>> GetOrderById(int id, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to OrdersController.GetById - Id: {id}", id);
 
             var order = await _mediator.Send(new GetOrderByIdQuery(id), cancellationToken);
-            var apiResp = new ApiResponse<object>(order, 200, "Request successful");
+            var apiResp = new ApiResponse<OrderDetailDto>(order, 200, "Request successful");
             return Ok(apiResp);
 
         }
@@ -71,18 +73,20 @@ namespace ASP.NET_Hands_on.Controllers
         // CLient only needs to send a List consisting of products' id: [1, 2, 1]
         [HttpPost]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status201Created)]
-        public async Task<ActionResult<ApiResponse<object>>> CreateOrder([FromBody] OrderCreateRequest request, CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(ApiResponse<OrderDetailDto>), StatusCodes.Status201Created)]
+        public async Task<ActionResult<ApiResponse<OrderDetailDto>>> CreateOrder([FromBody] OrderCreateRequest request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Run to OrdersController.CreateOrder - List Of Product Id: {@Ids}", request.ProductIdsAndQuantity);
             var order = await _mediator.Send(new CreateOrderCommand(request.ProductIdsAndQuantity, request.Email, request.CustomerId, request.Address), cancellationToken);
-            var apiResp = new ApiResponse<object>(order, 201, "Created");
-            return CreatedAtAction(nameof(GetById), new { id = order.OrderId }, apiResp);
+            var apiResp = new ApiResponse<OrderDetailDto>(order, 201, "Created");
+            return CreatedAtAction(nameof(GetOrderById), new { id = order.OrderId }, apiResp);
         }
 
         [HttpPost("{orderId}/products/{productId}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> AddProductToOrder(int orderId, int productId, [FromQuery] int quantity = 1, CancellationToken cancellationToken = default)
         {
 
@@ -93,13 +97,14 @@ namespace ASP.NET_Hands_on.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<object>>> Delete(int id, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
             var deleted = await _mediator.Send(new DeleteOrderCommand(id), cancellationToken);
-            if (!deleted) return NotFound();
-            return Ok();
+
+            return NoContent();
         }
     }
 }

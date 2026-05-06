@@ -13,10 +13,10 @@ using ASP.NET_Hands_on.Application.Interface;
 namespace ASP.NET_Hands_on.Application.CQRS.Orders
 {
     public record GetOrdersQuery(int PageNumber, int PageSize) : IRequest<(List<Order> Items, int TotalCount)>;
-    public record GetOrderByIdQuery(int OrderId) : IRequest<object>;
-    public record CreateOrderCommand(Dictionary<int, int> ProductIdsAndQuantity, string Email, int CustomerId, string CustomerAddress) : IRequest<Order>;
+    public record GetOrderByIdQuery(int OrderId) : IRequest<OrderDetailDto>;
+    public record CreateOrderCommand(Dictionary<int, int> ProductIdsAndQuantity, string Email, int CustomerId, string CustomerAddress) : IRequest<OrderDetailDto>;
     public record AddProductToOrderCommand(int OrderId, int ProductId, int Quantity) : IRequest<bool>;
-    public record DeleteOrderCommand(int OrderId) : IRequest<bool>;
+    public record DeleteOrderCommand(int OrderId) : IRequest<Unit>;
 
     public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, (List<Order> Items, int TotalCount)>
     {
@@ -43,7 +43,7 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
         }
     }
 
-    public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, object>
+    public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, OrderDetailDto>
     {
         private readonly IOrderRepository _repo;
         private readonly ILogger<GetOrderByIdQueryHandler> _logger;
@@ -54,7 +54,7 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
             _logger = logger;
         }
 
-        public async Task<object> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
+        public async Task<OrderDetailDto> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("GetOrderByIdQueryHandler - orderId: {OrderId}", request.OrderId);
 
@@ -70,7 +70,7 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
         }
     }
 
-    public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Order>
+    public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, OrderDetailDto>
     {
         private readonly IOrderRepository _repo;
         private readonly ILogger<CreateOrderCommandHandler> _logger;
@@ -85,7 +85,7 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
             _emailService = emailService;
         }
 
-        public async Task<Order> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+        public async Task<OrderDetailDto> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("CreateOrderCommandHandler - creating order with {Count} productIds", request.ProductIdsAndQuantity?.Count ?? 0);
 
@@ -155,7 +155,12 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
             //await _queue.QueueEmailAsync(emailJob);
 
             _logger.LogInformation("CreateOrderCommandHandler - created order {OrderId}", newOrder.OrderId);
-            return newOrder;
+
+            OrderDetailDto orderDetails = new OrderDetailDto(newOrder.OrderId, newOrder.OrderDate, newOrder.TotalPrice,
+                newOrder.OrderProducts.Select(op => new ProductDto(op.Product.Id, op.Product.ProductId, op.Product.Name ?? string.Empty, op.Product.Price)).ToList(), 
+                newOrder.Customer?.Name);
+
+            return orderDetails;
         }
     }
 
@@ -212,7 +217,7 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
         }
     }
 
-    public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, bool>
+    public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, Unit>
     {
         private readonly IOrderRepository _repo;
         private readonly ILogger<DeleteOrderCommandHandler> _logger;
@@ -223,23 +228,21 @@ namespace ASP.NET_Hands_on.Application.CQRS.Orders
             _logger = logger;
         }
 
-        public async Task<bool> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("DeleteOrderCommandHandler - deleting order {OrderId}", request.OrderId);
 
             var order = await _repo.GetByIdAsync(request.OrderId, cancellationToken);
-            if (order == null)
-            {
-                _logger.LogWarning("DeleteOrderCommandHandler - order {OrderId} not found", request.OrderId);
-                return false;
-            }
+            if (order == null) throw new KeyNotFoundException($"Order with id {request.OrderId} was not found.");
+
 
             await _repo.RemoveOrderProductsByOrderIdAsync(request.OrderId, cancellationToken);
-            await _repo.DeleteOrderAsync(order, cancellationToken);
+            order.isDeleted = true;
+
             await _repo.SaveChangesAsync(cancellationToken);
 
             _logger.LogInformation("DeleteOrderCommandHandler - deleted order {OrderId}", request.OrderId);
-            return true;
+            return Unit.Value;
         }
     }
 }

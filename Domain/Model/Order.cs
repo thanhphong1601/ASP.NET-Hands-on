@@ -12,6 +12,7 @@ namespace ASP.NET_Hands_on.Domain.Model
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
         public string? Address { get; set; }
+        public Boolean isDeleted { get; set; } = false;
 
         public int CustomerId { get; set; }
         public Customer Customer { get; set; }

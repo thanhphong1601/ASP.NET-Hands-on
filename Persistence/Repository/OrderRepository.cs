@@ -63,6 +63,7 @@ namespace ASP.NET_Hands_on.Persistence.Repository
             return _db.Orders
                 .AsNoTracking()
                 .OrderBy(o => o.OrderId)
+                .Where(o => o.isDeleted == false)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);

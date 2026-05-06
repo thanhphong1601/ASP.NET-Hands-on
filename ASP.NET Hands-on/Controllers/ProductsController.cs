@@ -107,7 +107,7 @@ namespace ASP.NET_Hands_on.Controllers
             _logger.LogInformation("Run to ProductsController.Create - creating product {ProductId}", newProduct.ProductId);
             var created = await _mediator.Send(new CreateProductCommand(newProduct), cancellationToken);
             var apiResp = new ApiResponse<Product>(created, 201, "Created");
-            return CreatedAtAction(nameof(CreateProduct), new { id = created.Id }, apiResp);
+            return CreatedAtAction(nameof(GetProductByKeyword), new { id = created.Id }, apiResp);
         }
 
         //POST: api/products/many
@@ -126,7 +126,7 @@ namespace ASP.NET_Hands_on.Controllers
 
             var created = await _mediator.Send(new CreateManyProductsCommand(productList), cancellationToken);
             var apiResp = new ApiResponse<List<Product>>(created, 201, "Created");
-            return CreatedAtAction(nameof(CreateManyProducts), null, apiResp);
+            return CreatedAtAction(nameof(GetProductByKeyword), null, apiResp);
         }
 
         //PUT: api/products/5
