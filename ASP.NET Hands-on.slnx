@@ -4,4 +4,5 @@
   <Project Path="Domain/Domain.csproj" Id="44c737fa-098c-4869-ab7c-68eb37ff479c" />
   <Project Path="Infrastructure/Infrastructure.csproj" Id="ef3b2ff3-fd38-4142-bf20-3a82924c58f1" />
   <Project Path="Persistence/Persistence.csproj" Id="b7cab038-d72f-4c51-b466-854c89d605ec" />
+  <Project Path="UnitTesting.MSTests/UnitTesting.MSTests.csproj" Id="9ee53abc-219a-46db-81f4-b6cc5bba1e04" />
 </Solution>
