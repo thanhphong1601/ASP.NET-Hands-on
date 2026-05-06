@@ -15,7 +15,7 @@ namespace ASP.NET_Hands_on.Application.IRepository
         Task AddRangeAsync(List<Product> products, CancellationToken cancellationToken);
         Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken);
         Task<List<Product>> GetByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken);
-        Task RemoveAsync(Product product, CancellationToken cancellationToken); 
+        Task RemoveAsync(Product product, CancellationToken cancellationToken);
         Task SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

@@ -283,9 +283,6 @@ namespace Persistence.Data.Miragtions
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -305,7 +302,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 1,
-                            IsDeleted = false,
                             Name = "Laptop Asus ROG Strix",
                             Price = 35000000m,
                             ProductId = "LAP01"
@@ -313,7 +309,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 2,
-                            IsDeleted = false,
                             Name = "Laptop Dell XPS 15",
                             Price = 45000000m,
                             ProductId = "LAP02"
@@ -321,7 +316,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 3,
-                            IsDeleted = false,
                             Name = "Laptop Lenovo ThinkPad",
                             Price = 28000000m,
                             ProductId = "LAP03"
@@ -329,7 +323,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 4,
-                            IsDeleted = false,
                             Name = "Bàn phím cơ Keychron K2",
                             Price = 2500000m,
                             ProductId = "ACC01"
@@ -337,7 +330,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 5,
-                            IsDeleted = false,
                             Name = "Chuột Logitech MX Master 3S",
                             Price = 2200000m,
                             ProductId = "ACC02"
@@ -345,7 +337,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 6,
-                            IsDeleted = false,
                             Name = "Màn hình LG UltraGear 27\"",
                             Price = 8500000m,
                             ProductId = "ACC03"
@@ -353,7 +344,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 7,
-                            IsDeleted = false,
                             Name = "Tai nghe Sony WH-1000XM5",
                             Price = 6500000m,
                             ProductId = "ACC04"
@@ -361,7 +351,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 8,
-                            IsDeleted = false,
                             Name = "Ổ cứng SSD Samsung 1TB",
                             Price = 3200000m,
                             ProductId = "ACC05"
@@ -369,7 +358,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 9,
-                            IsDeleted = false,
                             Name = "Ghế Ergonomic Herman Miller",
                             Price = 45000000m,
                             ProductId = "ACC06"
@@ -377,7 +365,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 10,
-                            IsDeleted = false,
                             Name = "Sách C# 12 and .NET 8",
                             Price = 650000m,
                             ProductId = "BOK01"
@@ -385,7 +372,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 11,
-                            IsDeleted = false,
                             Name = "Sách Clean Architecture",
                             Price = 550000m,
                             ProductId = "BOK02"
@@ -393,7 +379,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 12,
-                            IsDeleted = false,
                             Name = "Sách SQL Optimization",
                             Price = 480000m,
                             ProductId = "BOK03"
@@ -401,7 +386,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 13,
-                            IsDeleted = false,
                             Name = "Sách Angular & TypeScript",
                             Price = 520000m,
                             ProductId = "BOK04"
@@ -409,7 +393,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 14,
-                            IsDeleted = false,
                             Name = "Sách Python Data Science",
                             Price = 600000m,
                             ProductId = "BOK05"
@@ -417,7 +400,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 15,
-                            IsDeleted = false,
                             Name = "Gói NovelAI Premium (Tháng)",
                             Price = 600000m,
                             ProductId = "SUB01"
@@ -425,7 +407,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 16,
-                            IsDeleted = false,
                             Name = "Gói Last Origin Monthly Pass",
                             Price = 350000m,
                             ProductId = "SUB02"
@@ -433,7 +414,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 17,
-                            IsDeleted = false,
                             Name = "Bản quyền JetBrains Rider",
                             Price = 3800000m,
                             ProductId = "SFT01"
@@ -441,7 +421,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 18,
-                            IsDeleted = false,
                             Name = "OpenAI API Credits",
                             Price = 1200000m,
                             ProductId = "SFT02"
@@ -449,7 +428,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 19,
-                            IsDeleted = false,
                             Name = "PaddleOCR Pro License",
                             Price = 5000000m,
                             ProductId = "SFT03"
@@ -457,7 +435,6 @@ namespace Persistence.Data.Miragtions
                         new
                         {
                             Id = 20,
-                            IsDeleted = false,
                             Name = "GitHub Copilot (Năm)",
                             Price = 2500000m,
                             ProductId = "SFT04"

@@ -58,7 +58,6 @@ namespace ASP.NET_Hands_on.Persistence.Repository
                 .OrderBy(p => p.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .Where(p => p.IsDeleted == false)
                 .Select(p => new ProductDto(p.Id, p.ProductId, p.Name, p.Price))
                 .ToListAsync(cancellationToken);
 
