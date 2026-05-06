@@ -288,7 +288,7 @@
   },
   {
     "ContainingType": "ASP.NET_Hands_on.Controllers.ProductsController",
-    "Method": "GetAll",
+    "Method": "GetAllProducts",
     "RelativePath": "api/Products",
     "HttpMethod": "GET",
     "IsController": true,
@@ -329,7 +329,7 @@
   },
   {
     "ContainingType": "ASP.NET_Hands_on.Controllers.ProductsController",
-    "Method": "Create",
+    "Method": "CreateProduct",
     "RelativePath": "api/Products",
     "HttpMethod": "POST",
     "IsController": true,
@@ -365,7 +365,7 @@
   },
   {
     "ContainingType": "ASP.NET_Hands_on.Controllers.ProductsController",
-    "Method": "Update",
+    "Method": "UpdateProduct",
     "RelativePath": "api/Products/{id}",
     "HttpMethod": "PATCH",
     "IsController": true,
@@ -406,7 +406,7 @@
   },
   {
     "ContainingType": "ASP.NET_Hands_on.Controllers.ProductsController",
-    "Method": "Delete",
+    "Method": "DeleteProduct",
     "RelativePath": "api/Products/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
@@ -442,7 +442,7 @@
   },
   {
     "ContainingType": "ASP.NET_Hands_on.Controllers.ProductsController",
-    "Method": "Patch",
+    "Method": "PatchProduct",
     "RelativePath": "api/Products/{id}/update",
     "HttpMethod": "PATCH",
     "IsController": true,
@@ -498,7 +498,7 @@
   },
   {
     "ContainingType": "ASP.NET_Hands_on.Controllers.ProductsController",
-    "Method": "CreateMany",
+    "Method": "CreateManyProducts",
     "RelativePath": "api/Products/many",
     "HttpMethod": "POST",
     "IsController": true,

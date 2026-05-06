@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using Persistence.Data;
 using Polly;
 using Polly.Extensions.Http;
@@ -188,6 +189,39 @@ builder.Services
 
 // Enable Serilog integration with the generic host
 builder.Host.UseSerilog();
+
+//builder.Services.AddSwaggerGen(c =>
+//{
+//    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+//    {
+//        Description = @"Nhập JWT Token của bạn vào đây. 
+//                      Cú pháp chuẩn: Bearer {token}
+//                      Ví dụ: Bearer eyJhbGciOiJIUzI1...",
+//        Name = "Authorization",
+//        In = ParameterLocation.Header, 
+//        Type = SecuritySchemeType.ApiKey,
+//        Scheme = "Bearer"
+//    });
+
+//    // 2. Yêu cầu toàn bộ hệ thống phải kiểm tra "thẻ" này (Security Requirement)
+//    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+//    {
+//        {
+//            new OpenApiSecurityScheme
+//            {
+//                Reference = new OpenApiReference
+//                {
+//                    Type = ReferenceType.SecurityScheme,
+//                    Id = "Bearer"
+//                },
+//                Scheme = "oauth2",
+//                Name = "Bearer",
+//                In = ParameterLocation.Header,
+//            },
+//            new List<string>()
+//        }
+//    });
+//});
 
 var app = builder.Build();
 
